@@ -1,9 +1,11 @@
 import Chat
 import java.util.*
 
-class PersonalChat(val partner: User) : Chat(LinkedList(), LinkedList()) {
+class PersonalChat(val member1: User, val member2: User) : Chat(MutableList(), MutableList()) {
     init {
-        members.add(partner)
+        members = MutableListOf(member1, member2)
+        member1.addChat(this)
+        member2.addChat(this)
     }
 
 }

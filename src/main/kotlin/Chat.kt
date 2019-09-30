@@ -1,6 +1,6 @@
 import java.util.*
 
-open class Chat(var members: LinkedList<User>, var messages: LinkedList<Message>) {
+open class Chat(var members: MutableList<User>, var messages: MutableList<Message>) {
 
     fun send(from: User, message: Message) {
         for (member in members) {

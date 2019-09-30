@@ -1,6 +1,6 @@
 import java.util.*
 
-class GroupChat(val owner: User, val chatName: String) : Chat(LinkedList(), LinkedList()) {
+class GroupChat(val owner: User, val chatName: String) : Chat(MutableList(), MutableList()) {
     init {
         members.add(owner)
         name = chatName
