@@ -1,3 +1,5 @@
+import java.util.*
+
 class GroupChat(val owner: User) : Chat(LinkedList(), LinkedList()) {
     init {
         members.add(owner)

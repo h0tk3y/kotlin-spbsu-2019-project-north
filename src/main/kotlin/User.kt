@@ -1,8 +1,12 @@
+import java.util.*
+import kotlin.collections.HashSet
+
+interface UserAttachments {}
 class User(
     var personalChats: LinkedList<PersonalChat>,
     var groupChats: LinkedList<GroupChat>,
-    var banned: HashSet<User>
-    var documents: Dokumenty_na_servere
+    var banned: HashSet<User>,
+    var documents: UserAttachments
 ) {
 
 

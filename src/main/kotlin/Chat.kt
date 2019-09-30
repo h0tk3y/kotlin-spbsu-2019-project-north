@@ -1,3 +1,5 @@
+import java.util.*
+
 open class Chat(var members: LinkedList<User>, var messages: LinkedList<Message>) {
 
     fun send(from: User, message: Message) {
