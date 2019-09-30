@@ -3,12 +3,20 @@ import java.util.*
 class UserBase(
     var allUsers: LinkedList<User>
 ) {
-    fun searchByName(name: String) {
-        return allUsers.all{it.name == name}
+    fun addUser(user: User) {
+        allUsers.add(user)
     }
 
-    fun searchByMail(mail: String)
+    fun removeUser(user: User) {
+        allUsers.remove(user)
+    }
+
+    fun searchByName(name: String): List<User> {
+        return (allUsers.partition{it.name == name}).first
+    }
+
+    fun searchByMail(email: String) : List<User>
     {
-        return allUsers.all{it.mail == mail}
+        return allUsers.partition{it.email == email}.first
     }
 }
