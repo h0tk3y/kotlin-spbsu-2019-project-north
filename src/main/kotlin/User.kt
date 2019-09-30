@@ -3,13 +3,20 @@ import kotlin.collections.HashSet
 
 interface UserAttachments {}
 class User(
-    var personalChats: LinkedList<PersonalChat>,
-    var groupChats: LinkedList<GroupChat>,
-    var banned: HashSet<User>,
-    var documents: UserAttachments,
-    var contacts: LinkedList<Contact>
+    val name: String, val email: String, val id: Long
 ) {
+    var personalChats: MutableList<PersonalChat>
+    var groupChats: MutableList<GroupChat>
+    var banned: MutableSet<User>
+    lateinit var documents: UserAttachments
+    var contacts: MutableList<Contact>
 
+    init {
+        groupChats = LinkedList()
+        personalChats = LinkedList()
+        contacts = LinkedList()
+        banned = HashSet()
+    }
 
     fun sendMessage(m: Message, c: Chat) {
         c.send(this, m)
@@ -34,13 +41,5 @@ class User(
             groupChats.add(chat)
         }
     }
-
-    fun searchChat(chat: Chat, query: Regex) = chat.messages.filter {
-        query.containsMatchIn(it.text) && !isBanned(it.from)
-    }.map { Pair(chat, it) }
-
-
-    fun search(query: String) = personalChats.map { searchChat(it, Regex(query)) }
-        .plus(personalChats.map { searchChat(it, Regex(query)) })
 
 }
