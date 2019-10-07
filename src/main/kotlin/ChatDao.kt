@@ -1,0 +1,3 @@
+interface ChatDao : Dao<Char> {
+
+}

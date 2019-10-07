@@ -1,0 +1,3 @@
+interface UserDao : Dao<User> {
+
+}
