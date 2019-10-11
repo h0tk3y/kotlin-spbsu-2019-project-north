@@ -1,8 +1,23 @@
-class Message(
-    var text: String, val data: Attachment, val from: User, val time: Int,
-    val isDeleted: Boolean, val id: Long
-) {
-    fun edit(user: User, newText: String) {
+import com.sun.org.apache.xpath.internal.operations.Bool
+
+//11.10.2019. Аля
+
+class Message(val messageId: MessageId,
+              var text: String,
+              val from: UserId,
+              val to: ChatId,
+              val time: Int,
+              var isDeleted: Boolean = false,
+              var isEdited: Boolean = false)
+{
+    fun edit(newText: String) {
         text = newText
+        isEdited = true
     }
+
+    fun delete() {
+        text = "This message has been deleted"
+        isDeleted = true
+    }
+
 }
