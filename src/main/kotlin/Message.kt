@@ -2,7 +2,8 @@ import com.sun.org.apache.xpath.internal.operations.Bool
 
 //11.10.2019. Аля
 
-class Message(var text: String,
+class Message(val messageId: MessageId,
+              var text: String,
               val from: UserId,
               val to: ChatId,
               val time: Int,
