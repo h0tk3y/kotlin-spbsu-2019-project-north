@@ -2,12 +2,12 @@ import java.util.*
 import kotlin.collections.HashSet
 
 interface UserAttachments {}
-class User(
+class UserImpl(
     val name: String, val email: String, val id: Long
 ) {
     var personalChats: MutableList<PersonalChat>
     var groupChats: MutableList<GroupChat>
-    var banned: MutableSet<User>
+    var banned: MutableSet<UserImpl>
     lateinit var documents: UserAttachments
     var contacts: MutableList<Contact>
 
@@ -15,22 +15,22 @@ class User(
         groupChats = LinkedList()
         personalChats = LinkedList()
         contacts = LinkedList()
-        banned = HashSet()
+        banned = mutableSetOf()
     }
 
     fun sendMessage(m: Message, c: Chat) {
         c.send(this, m)
     }
 
-    fun isBanned(other: User): Boolean {
+    fun isBanned(other: UserImpl): Boolean {
         return other in banned
     }
 
-    fun ban(other: User) {
+    fun ban(other: UserImpl) {
         banned.add(other)
     }
 
-    fun sendNotification(m: Message, c: Chat, from: User) {
+    fun sendNotification(m: Message, c: Chat, from: UserImpl) {
         TODO("Send notification")
     }
 
