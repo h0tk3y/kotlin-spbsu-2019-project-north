@@ -1,3 +1,1 @@
-class Server {
-
-}
+class Server

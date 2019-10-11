@@ -1,10 +1,7 @@
-//11.10.2019. Аля
-
 typealias ChatId = Long
 
-interface ChatDao : Dao<Char> {
-    fun getChatByInviteLink(link: String) : Id?
+interface ChatDao : Dao<Chat> {
+    fun getChatByInviteLink(link: String) : ChatId?
     fun searchByName(name: String): List<ChatId>
-    fun searchByUserName(userName: String): List<ChatId>
-    fun searchByUser(userId: UserId): List<ChatId>
+    fun searchWithUser(userId: UserId): List<ChatId>
 }
