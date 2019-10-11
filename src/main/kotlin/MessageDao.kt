@@ -1,0 +1,3 @@
+interface MessageDao : Dao<Message> {
+
+}
