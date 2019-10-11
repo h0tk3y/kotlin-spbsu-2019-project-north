@@ -1,5 +1,3 @@
-//11.10.2019. Аля
-
 typealias ChatId = Long
 
 interface ChatDao : Dao<Char> {

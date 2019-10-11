@@ -1,5 +1,3 @@
-//11.10.2019. Аля
-
 class Message(val messageId: MessageId,
               var text: String,
               val from: UserId,
