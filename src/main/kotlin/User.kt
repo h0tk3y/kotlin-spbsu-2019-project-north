@@ -4,5 +4,8 @@ data class User(
     val email: String,
     val phoneNumber: String,
     val chats: MutableList<ChatId>,
-    val blockedUsers: MutableList<UserId>
+    val blockedUsers: MutableList<UserId>,
+
+    var login: String, 
+    var password: String
 )
