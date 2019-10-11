@@ -1,5 +1,3 @@
-import com.sun.org.apache.xpath.internal.operations.Bool
-
 //11.10.2019. Аля
 
 class Message(val messageId: MessageId,
