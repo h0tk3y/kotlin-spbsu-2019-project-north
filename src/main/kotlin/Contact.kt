@@ -1,6 +1,6 @@
 import java.util.*
 
-class Contact(
+data class Contact(
     var id: Long,
     var name: String
 )
