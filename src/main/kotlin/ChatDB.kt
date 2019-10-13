@@ -16,7 +16,7 @@ object ChatDB : ChatDao {
     override fun delete(elemId: ChatId) {
         chats.remove(elemId)
     }
-    
+
     override fun getChatByInviteLink(link: String): ChatId? = chats.entries
         .find { (it.value as? GroupChat)?.uniqueLink?.equals(link) ?: false }?.key
 
