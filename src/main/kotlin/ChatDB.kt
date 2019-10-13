@@ -16,13 +16,10 @@ object ChatDB : ChatDao {
     override fun delete(elemId: ChatId) {
         chats.remove(elemId)
     }
+    
     override fun getChatByInviteLink(link: String): ChatId? = chats.entries
-        .find {
-             when (val chat = it.value) {
-                 is GroupChat -> chat.uniqueLink == link
-                 else -> false
-             }
-        }?.key
+        .find { (it.value as? GroupChat)?.uniqueLink?.equals(link) ?: false }?.key
+
     override fun searchByName(name: String): List<ChatId> = chats.entries
         .mapNotNull { if ((it.value as? GroupChat)?.chatName?.equals(name) ?: false) it.key else null }
 

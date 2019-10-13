@@ -1,5 +1,6 @@
 object UserDB : UserDao {
     val users: MutableMap<UserId, User> = mutableMapOf()
+    
     override fun add(elem: User): UserId {
         val id = users.size.toLong()
         users.put(id, elem)
