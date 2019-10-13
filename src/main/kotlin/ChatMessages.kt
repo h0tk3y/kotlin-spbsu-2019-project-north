@@ -1,5 +1,6 @@
 data class ChatMessages(val messageBase: MessageDao) : ChatMessageDao {
     val messageList: MutableList<MessageId> = mutableListOf()
+    
     override fun get(elemId: MessageId): Message? {
         if (messageList.contains(elemId)) {
             return messageBase.get(elemId)
@@ -20,18 +21,13 @@ data class ChatMessages(val messageBase: MessageDao) : ChatMessageDao {
         messageBase.delete(elemId)
         messageList.remove(elemId)
     }
-    override fun searchByText(text: String): List<MessageId> {
-        return messageList.filter {
-            val s = messageBase.get(it)
-            if (s == null) {
-                false
-            } else {
-                text in s.text
-            }
-         }
+
+    override fun searchByText(text: String): List<MessageId> = messageList.filter {
+        messageBase.get(it)?.text?.contains(text) ?: false
     }
-    override fun getBlock(last: MessageId, blockSize: Int): List<MessageId> {
-        val pos = messageList.indexOf(last)
+
+    override fun getBlock(lastPos: Int?, blockSize: Int): List<MessageId> {
+        val pos = lastPos ?: messageList.size
         return messageList.subList(pos - blockSize, pos - 1)
     }
 }
