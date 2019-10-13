@@ -18,16 +18,14 @@ object ChatDB : ChatDao {
     }
     override fun getChatByInviteLink(link: String): ChatId? = chats.entries
         .find {
-             val chat = it.value as? GroupChat
-             if (chat == null) {
-                 false
-             } else {
-                 chat.uniqueLink == link
+             when (val chat = it.value) {
+                 is GroupChat -> chat.uniqueLink == link
+                 else -> false
              }
         }?.key
     override fun searchByName(name: String): List<ChatId> = chats.entries
         .mapNotNull { if ((it.value as? GroupChat)?.chatName?.equals(name) ?: false) it.key else null }
-        
+
     override fun searchWithUser(userId: UserId): List<ChatId> = chats.entries
          .mapNotNull {
             when (val chat = it.value) {
