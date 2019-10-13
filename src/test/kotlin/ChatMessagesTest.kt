@@ -1,7 +1,5 @@
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class ChatMessagestTest {
     val message1 = Message(0, "Alya is cool", 0, 0, false, false)
