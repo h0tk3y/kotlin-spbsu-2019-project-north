@@ -11,14 +11,14 @@ class ChatMessagestTest {
         val base = MessageDB
         val chat = ChatMessages(base)
         chat.add(message1)
-        Assertions.assertTrue(chat.messageList.size == 1)
+        Assertions.assertEquals(chat.messageList.size, 1)
     }
 
     @Test
     fun testGet() {
         val chat = ChatMessages(base)
         val id = chat.add(message2)
-        Assertions.assertTrue(chat.get(id) == message2)
+        Assertions.assertEquals(chat.get(id), message2)
     }
 
     @Test
@@ -26,7 +26,7 @@ class ChatMessagestTest {
         val chat = ChatMessages(base)
         val id = chat.add(message1)
         chat.modify(id, message2)
-        Assertions.assertTrue(chat.get(id) == message2)
+        Assertions.assertEquals(chat.get(id), message2)
     }
 
     @Test
@@ -35,8 +35,9 @@ class ChatMessagestTest {
         val id1 = chat.add(message1)
         val id2 = chat.add(message2)
         chat.delete(id1)
-        Assertions.assertTrue(chat.get(id1) == null && chat.get(id2) == message2)
-        Assertions.assertTrue(chat.messageList.size == 1)
+        Assertions.assertEquals(chat.get(id1), null)
+        Assertions.assertEquals(chat.get(id2), message2)
+        Assertions.assertEquals(chat.messageList.size, 1)
     }
 
     @Test
@@ -44,9 +45,9 @@ class ChatMessagestTest {
         val chat = ChatMessages(base)
         val id1 = chat.add(message1)
         val id2 = chat.add(message2)
-        Assertions.assertTrue(chat.searchByText("Alya is cool version 2") == listOf(id2))
-        Assertions.assertTrue(chat.searchByText("Alya is cool") == listOf(id1, id2))
+        Assertions.assertEquals(chat.searchByText("Alya is cool version 2"), listOf(id2))
+        Assertions.assertEquals(chat.searchByText("Alya is cool"), listOf(id1, id2))
         chat.delete(id2)
-        Assertions.assertTrue(chat.searchByText("Alya") == listOf(id1))
+        Assertions.assertEquals(chat.searchByText("Alya"), listOf(id1))
     }
 }
