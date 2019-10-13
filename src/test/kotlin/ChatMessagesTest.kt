@@ -8,7 +8,6 @@ class ChatMessagestTest {
 
     @Test
     fun testAdd() {
-        val base = MessageDB
         val chat = ChatMessages(base)
         chat.add(message1)
         Assertions.assertEquals(chat.messageList.size, 1)
