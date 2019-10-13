@@ -26,7 +26,7 @@ data class ChatMessages(val messageBase: MessageDao) : ChatMessageDao {
             if (s == null) {
                 false
             } else {
-                s.text == text
+                text in s.text
             }
          }
     }
