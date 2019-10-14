@@ -6,6 +6,6 @@ data class User(
     var login: String,
     var password: String
 ) {
-    val chats: MutableList<ChatId> = mutableListOf()
-    val blockedUsers: MutableList<UserId> = mutableListOf()
+    private val chats: MutableList<ChatId> = mutableListOf()
+    private val blockedUsers: MutableList<UserId> = mutableListOf()
 }

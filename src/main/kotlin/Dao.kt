@@ -5,4 +5,5 @@ interface Dao<T> {
     fun add(elem: T): Id
     fun modify(elemId: Id, newElem: T)
     fun delete(elemId: Id)
+    val size: Int
 }

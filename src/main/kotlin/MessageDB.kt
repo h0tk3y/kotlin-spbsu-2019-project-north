@@ -1,21 +1,24 @@
 object MessageDB : MessageDao {
-    val base: MutableMap<MessageId, Message> = hashMapOf()
+    private val base: MutableMap<MessageId, Message> = hashMapOf()
 
     override fun add(elem: Message): Id {
         val id = base.size.toLong()
-        base.put(id, elem)
+        base[id] = elem
         return id
     }
 
     override fun modify(elemId: Id, newElem: Message) {
-        base.put(elemId, newElem)
+        base[elemId] = newElem
     }
 
     override fun get(elemId: Id): Message? {
-        return base.get(elemId)
+        return base[elemId]
     }
 
     override fun delete(elemId: Id) {
         base.remove(elemId)
     }
+
+    override val size
+        get() = base.size
 }
