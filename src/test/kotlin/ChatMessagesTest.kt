@@ -1,10 +1,12 @@
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.koin.core.inject
+import org.koin.test.KoinTest
 
-class ChatMessagestTest {
+class ChatMessagestTest : KoinTest {
     val message1 = Message(0, "Alya is cool", 0, 0, false, false)
     val message2 = Message(0, "Alya is cool version 2", 0, 0, false, false)
-    val base = MessageDB
+    val base : MessageDao by inject()
 
     @Test
     fun testAdd() {

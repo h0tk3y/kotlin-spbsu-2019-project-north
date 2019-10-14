@@ -1,4 +1,4 @@
-object MessageDB : MessageDao {
+class MessageDB : MessageDao {
     private val base: MutableMap<MessageId, Message> = hashMapOf()
 
     override fun add(elem: Message): Id {
