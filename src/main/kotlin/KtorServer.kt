@@ -21,8 +21,7 @@ fun main(args: Array<String>) {
 
     val server = embeddedServer(Netty, port = 8080) {
         routing {
-            install(Sessions) {
-                cookie<MySession>("COOKIE_NAME")
+            install(Sessions) { cookie<MySession>("COOKIE_NAME")
             }
             install(ContentNegotiation) {
                 jackson {}
