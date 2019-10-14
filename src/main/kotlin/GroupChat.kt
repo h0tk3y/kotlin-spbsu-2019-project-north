@@ -5,16 +5,20 @@ data class GroupChat(
     val uniqueLink: String? = null
 ) : Chat {
     override val messages: ChatMessageDao = ChatMessages(messageDB)
-    val users: MutableSet<UserId> = hashSetOf(owner)
+    private val users: MutableSet<UserId> = hashSetOf(owner)
 
     fun addUser(user: UserId, link: String? = null): Boolean {
-        if (user !in users && link == uniqueLink) {
+        return if (user !in users && link == uniqueLink) {
             users.add(user)
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
+
+    fun containsUser(user: UserId): Boolean = users.contains(user)
+    val countUsers
+        get() = users.size
 
     fun leave(user: UserId) {
         users.remove(user)

@@ -10,7 +10,7 @@ class ChatMessagestTest {
     fun testAdd() {
         val chat = ChatMessages(base)
         chat.add(message1)
-        Assertions.assertEquals(chat.messageList.size, 1)
+        Assertions.assertEquals(1, chat.size)
     }
 
     @Test
@@ -34,9 +34,9 @@ class ChatMessagestTest {
         val id1 = chat.add(message1)
         val id2 = chat.add(message2)
         chat.delete(id1)
-        Assertions.assertEquals(chat.get(id1), null)
-        Assertions.assertEquals(chat.get(id2), message2)
-        Assertions.assertEquals(chat.messageList.size, 1)
+        Assertions.assertEquals(null, chat.get(id1))
+        Assertions.assertEquals(message2, chat.get(id2))
+        Assertions.assertEquals(1, chat.size)
     }
 
     @Test
