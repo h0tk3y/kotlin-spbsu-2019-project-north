@@ -1,9 +1,6 @@
-//11.10.2019. Аля
-
 class Message(val messageId: MessageId,
               var text: String,
               val from: UserId,
-              val to: ChatId,
               val time: Int,
               var isDeleted: Boolean = false,
               var isEdited: Boolean = false)

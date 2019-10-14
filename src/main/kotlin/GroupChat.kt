@@ -1,19 +1,18 @@
-import org.koin.core.KoinComponent
-import org.koin.core.inject
-
 data class GroupChat(
+    val messageDB: MessageDao,
     val owner: UserId,
     val chatName: String,
     val uniqueLink: String? = null
-) : Chat, KoinComponent {
+) : Chat {
+    override val messages: ChatMessageDao = ChatMessages(messageDB)
+    val users: MutableSet<UserId> = hashSetOf(owner)
 
-    override val messages: ChatMessageDao by inject()
-
-    val users: MutableList<UserId> = mutableListOf(owner)
-
-    fun addUser(user: UserId, link: String? = null) {
-        if (link == uniqueLink) {
+    fun addUser(user: UserId, link: String? = null): Boolean {
+        if (user !in users && link == uniqueLink) {
             users.add(user)
+            return true
+        } else {
+            return false
         }
     }
 
