@@ -17,7 +17,9 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-val DB = mutableMapOf<String, Int>("log" to "pass".hashCode())
+private val DB = mutableMapOf<String, Int>("log" to "pass".hashCode())
+
+data class Credentials(val login: String?, val passHash: Int?)
 
 private fun hashString(input: String): String {
     val HEX_CHARS = "0123456789ABCDEF"
@@ -37,7 +39,6 @@ private fun hashString(input: String): String {
 
 fun main(args: Array<String>) {
     data class MySession(val name: String?, val time: String)
-    data class Credentials(val login: String?, val passHash: Int?)
 
     val server = embeddedServer(Netty, port = 8080) {
         routing {
@@ -77,7 +78,7 @@ fun main(args: Array<String>) {
                 }
             }
             get("/logout") {
-                val session = call.sessions.get<MySession>() ?: MySession(name = "Empty", time = "")
+                val session = call.sessions.get<MySession>() ?: MySession(name = "None", time = "")
                 call.sessions.clear<MySession>()
                 call.respondText("Logged out : ${session.name}")
             }
