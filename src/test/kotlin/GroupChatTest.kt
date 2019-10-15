@@ -1,8 +1,10 @@
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.koin.test.KoinTest
+import org.koin.test.inject
 
-class GroupChatTest {
-    val base = MessageDB
+class GroupChatTest : KoinTest {
+    val base : MessageDao by inject()
 
     @Test
     fun testAddUserPublicChat() {
