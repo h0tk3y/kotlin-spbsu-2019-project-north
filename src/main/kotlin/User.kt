@@ -8,4 +8,5 @@ data class User(
 ) {
     private val chats: MutableList<ChatId> = mutableListOf()
     private val blockedUsers: MutableList<UserId> = mutableListOf()
+    private val contacts: MutableList<Contact> = mutableListOf()
 }

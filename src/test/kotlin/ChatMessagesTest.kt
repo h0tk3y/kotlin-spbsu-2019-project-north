@@ -19,7 +19,7 @@ class ChatMessagestTest : KoinTest {
     fun testGet() {
         val chat = ChatMessages(base)
         val id = chat.add(message2)
-        Assertions.assertEquals(chat.get(id), message2)
+        Assertions.assertEquals(message2, chat.get(id))
     }
 
     @Test
@@ -27,7 +27,7 @@ class ChatMessagestTest : KoinTest {
         val chat = ChatMessages(base)
         val id = chat.add(message1)
         chat.modify(id, message2)
-        Assertions.assertEquals(chat.get(id), message2)
+        Assertions.assertEquals(message2, chat.get(id))
     }
 
     @Test
