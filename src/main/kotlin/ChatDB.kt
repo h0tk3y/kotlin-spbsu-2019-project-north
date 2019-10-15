@@ -1,4 +1,4 @@
-object ChatDB : ChatDao {
+class ChatDB : ChatDao {
     private val chats = hashMapOf<ChatId, Chat>()
 
     override fun add(elem: Chat): ChatId {

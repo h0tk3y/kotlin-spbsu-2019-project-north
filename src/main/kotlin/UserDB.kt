@@ -1,4 +1,4 @@
-object UserDB : UserDao {
+class UserDB : UserDao {
     private val users: MutableMap<UserId, User> = mutableMapOf()
 
     override fun add(elem: User): UserId {
