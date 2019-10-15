@@ -53,7 +53,8 @@ fun main(args: Array<String>) {
                 val passHash = creds.passHash
                 when {
                     login == null || passHash == null ->
-                        call.respond(mapOf("status" to "Login or password is missing"))
+                        call.respond(JSONObject(mutableMapOf(Pair("status", "Login or password is missing"))))
+                        //call.respond(mapOf("status" to "Login or password is missing"), ContentType.Application.Json)
                     login in DB.keys && DB[login] == passHash -> {
                         val time = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
                         val token = hashString(creds.toString() + time)
