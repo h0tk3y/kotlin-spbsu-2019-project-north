@@ -13,13 +13,7 @@ import io.ktor.util.toMap
 import jdk.nashorn.internal.objects.NativeDate.getUTCMilliseconds
 import org.json.simple.JSONObject
 import java.security.MessageDigest
-import java.time.Instant
-import java.time.format.DateTimeFormatter
 import java.util.*
-
-private val DB = mutableMapOf<String, Int>("log" to "pass".hashCode())
-
-data class Credentials(val login: String?, val passHash: Int?)
 
 private fun hashString(input: String): String {
     val HEX_CHARS = "0123456789ABCDEF"
@@ -37,8 +31,15 @@ private fun hashString(input: String): String {
     return result.toString()
 }
 
+private val maxId = 0
+private val curSessionNumber = 1
+private val DB = mutableMapOf<String, String>("log" to hashString("pass"))
+private val idByLogin = mutableMapOf<String, int>("log" to 0)
+
+data class Credentials(val login: String?, val passHash: String?)
+
 fun main(args: Array<String>) {
-    data class MySession(val name: String?, val time: String)
+    data class MySession(val id: Int, val number: Int, val token: String)
 
     val server = embeddedServer(Netty, port = 8080) {
         routing {
@@ -56,10 +57,9 @@ fun main(args: Array<String>) {
                     login == null || passHash == null ->
                         call.respond(mapOf("status" to "Login or password is missing"))
                     login in DB.keys && DB[login] == passHash -> {
-                        val time = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
-                        val token = hashString(creds.toString() + time)
-                        call.sessions.set(MySession(login, time))
-                        call.respond(mapOf("status" to "OK")) // TODO: CONTENT TYPE
+                        val token = hashString(creds.toString() + curSessionNumber)
+                        call.sessions.set(MySession(idByLogin[login], curSessionNumber++, token))
+                        call.respond(mapOf("status" to "OK")) //TODO CONTENT TYPE
                     }
                     else -> call.respond(mapOf("status" to "Неправильный логин или пароль"))
                 }
@@ -72,15 +72,18 @@ fun main(args: Array<String>) {
                     login in DB.keys -> call.respondText("Пользователь с таким именем уже существует")
                     password.length < 6 -> call.respondText("Пароль слишком короткий")
                     else -> {
-                        DB[login] = password.hashCode()
+                        DB[login] = hashString(password)
+                        idByLogin[login] = ++maxId
+                        call.sessions.set(MySession(maxId, curSessionNumber++, token))
                         call.respondText("OK")
                     }
                 }
             }
             get("/logout") {
-                val session = call.sessions.get<MySession>() ?: MySession(name = "None", time = "")
+                val session = call.sessions.get<MySession>()
                 call.sessions.clear<MySession>()
-                call.respondText("Logged out : ${session.name}")
+                if (session != null)
+                    call.respondText("Logged out : user #${session.id}")
             }
         }
     }
