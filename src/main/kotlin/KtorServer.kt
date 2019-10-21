@@ -1,6 +1,5 @@
 import io.ktor.application.*
 import io.ktor.features.ContentNegotiation
-import io.ktor.http.*
 import io.ktor.jackson.jackson
 import io.ktor.request.receive
 import io.ktor.response.*
@@ -8,14 +7,12 @@ import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.sessions.*
-import io.ktor.util.Hash
-import io.ktor.util.toMap
-import jdk.nashorn.internal.objects.NativeDate.getUTCMilliseconds
 import org.json.simple.JSONObject
 import java.security.MessageDigest
 import java.time.Instant
 import java.time.format.DateTimeFormatter
-import java.util.*
+import org.koin.ktor.ext.Koin
+import org.koin.Logger.slf4jLogger
 
 private val DB = mutableMapOf<String, Int>("log" to "pass".hashCode())
 
@@ -48,6 +45,10 @@ fun main(args: Array<String>) {
             install(ContentNegotiation) {
                 jackson {}
             }
+            install(Koin) {
+                slf4jLogger()
+                modules(daoModule)
+            }
             post("/login") {
                 val creds = call.receive<Credentials>()
                 val login = creds.login
@@ -55,7 +56,7 @@ fun main(args: Array<String>) {
                 when {
                     login == null || passHash == null ->
                         call.respond(JSONObject(mutableMapOf(Pair("status", "Login or password is missing"))))
-                        //call.respond(mapOf("status" to "Login or password is missing"), ContentType.Application.Json)
+                    //call.respond(mapOf("status" to "Login or password is missing"), ContentType.Application.Json)
                     login in DB.keys && DB[login] == passHash -> {
                         val time = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
                         val token = hashString(creds.toString() + time)
