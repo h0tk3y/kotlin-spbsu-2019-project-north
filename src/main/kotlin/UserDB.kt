@@ -1,19 +1,19 @@
 class UserDB : UserDao {
     private val users: MutableMap<UserId, User> = mutableMapOf()
 
-    override fun add(elem: User): UserId {
+    override fun addWithNewId(elem: User): UserId {
         val id = users.size.toLong()
         users[id] = elem
         return id
     }
 
-    override fun get(elemId: UserId): User? = users[elemId]
+    override fun getById(elemId: UserId): User? = users[elemId]
 
-    override fun modify(elemId: UserId, newElem: User) {
+    override fun modifyById(elemId: UserId, newElem: User) {
         users[elemId] = newElem
     }
 
-    override fun delete(elemId: UserId) {
+    override fun deleteById(elemId: UserId) {
         users.remove(elemId)
     }
 
