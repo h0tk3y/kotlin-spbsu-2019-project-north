@@ -1,27 +1,30 @@
-object ChatDB : ChatDao {
-    val chats: MutableMap<ChatId, Chat> = hashMapOf()
+class ChatDB : ChatDao {
+    private val chats = hashMapOf<ChatId, Chat>()
 
     override fun add(elem: Chat): ChatId {
         val id = chats.size.toLong()
-        chats.put(id, elem)
+        chats[id] = elem
         return id
-     }
+    }
 
-    override fun get(elemId: ChatId): Chat? = chats.get(elemId)
+    override fun get(elemId: ChatId): Chat? = chats[elemId]
 
     override fun modify(elemId: ChatId, newElem: Chat) {
-        chats.put(elemId, newElem)
+        chats[elemId] = newElem
     }
 
     override fun delete(elemId: ChatId) {
         chats.remove(elemId)
     }
 
+    override val size
+        get() = chats.size
+
     override fun getChatByInviteLink(link: String): ChatId? = chats.entries
         .find { (it.value as? GroupChat)?.uniqueLink?.equals(link) ?: false }?.key
 
     override fun searchByName(name: String): List<ChatId> = chats.entries.mapNotNull {
-        if ((it.value as? GroupChat)?.chatName?.equals(name) ?: false) it.key else null 
+        if ((it.value as? GroupChat)?.chatName == name) it.key else null
     }
 
     override fun searchWithUser(userId: UserId): List<ChatId> = chats.entries.mapNotNull {
@@ -31,7 +34,7 @@ object ChatDB : ChatDao {
                 else null
             }
             is GroupChat -> {
-                if (chat.users.contains(userId)) it.key
+                if (chat.containsUser(userId)) it.key
                 else null
             }
             else -> null
