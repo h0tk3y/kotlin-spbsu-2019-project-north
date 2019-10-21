@@ -1,9 +1,9 @@
 typealias Id = Long
 
 interface Dao<T> {
-    fun get(elemId: Id): T?
-    fun add(elem: T): Id
-    fun modify(elemId: Id, newElem: T)
-    fun delete(elemId: Id)
+    fun getById(elemId: Id): T?
+    fun addWithNewId(elem: T): Id
+    fun modifyById(elemId: Id, newElem: T)
+    fun deleteById(elemId: Id)
     val size: Int
 }

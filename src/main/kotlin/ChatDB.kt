@@ -1,19 +1,19 @@
 class ChatDB : ChatDao {
     private val chats = hashMapOf<ChatId, Chat>()
 
-    override fun add(elem: Chat): ChatId {
+    override fun addWithNewId(elem: Chat): ChatId {
         val id = chats.size.toLong()
         chats[id] = elem
         return id
     }
 
-    override fun get(elemId: ChatId): Chat? = chats[elemId]
+    override fun getById(elemId: ChatId): Chat? = chats[elemId]
 
-    override fun modify(elemId: ChatId, newElem: Chat) {
+    override fun modifyById(elemId: ChatId, newElem: Chat) {
         chats[elemId] = newElem
     }
 
-    override fun delete(elemId: ChatId) {
+    override fun deleteById(elemId: ChatId) {
         chats.remove(elemId)
     }
 

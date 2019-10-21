@@ -31,12 +31,6 @@ dependencies {
     testImplementation 'org.koin:koin-test:$koin_version'
 }
 
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
-}
-
 repositories {
     mavenLocal()
     jcenter()

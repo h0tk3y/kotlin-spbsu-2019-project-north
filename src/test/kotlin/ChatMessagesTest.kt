@@ -21,44 +21,44 @@ class ChatMessagestTest : KoinTest {
     @Test
     fun testAdd() {
         val chat: ChatMessageDao by inject()
-        chat.add(message1)
+        chat.addWithNewId(message1)
         Assertions.assertEquals(1, chat.size)
     }
 
     @Test
     fun testGet() {
         val chat: ChatMessageDao by inject()
-        val id = chat.add(message2)
-        Assertions.assertEquals(message2, chat.get(id))
+        val id = chat.addWithNewId(message2)
+        Assertions.assertEquals(message2, chat.getById(id))
     }
 
     @Test
     fun testModify() {
         val chat: ChatMessageDao by inject()
-        val id = chat.add(message1)
-        chat.modify(id, message2)
-        Assertions.assertEquals(message2, chat.get(id))
+        val id = chat.addWithNewId(message1)
+        chat.modifyById(id, message2)
+        Assertions.assertEquals(message2, chat.getById(id))
     }
 
     @Test
     fun testDelete() {
         val chat: ChatMessageDao by inject()
-        val id1 = chat.add(message1)
-        val id2 = chat.add(message2)
-        chat.delete(id1)
-        Assertions.assertEquals(null, chat.get(id1))
-        Assertions.assertEquals(message2, chat.get(id2))
+        val id1 = chat.addWithNewId(message1)
+        val id2 = chat.addWithNewId(message2)
+        chat.deleteById(id1)
+        Assertions.assertEquals(null, chat.getById(id1))
+        Assertions.assertEquals(message2, chat.getById(id2))
         Assertions.assertEquals(1, chat.size)
     }
 
     @Test
     fun testSearchByText() {
         val chat: ChatMessageDao by inject()
-        val id1 = chat.add(message1)
-        val id2 = chat.add(message2)
+        val id1 = chat.addWithNewId(message1)
+        val id2 = chat.addWithNewId(message2)
         Assertions.assertEquals(chat.searchByText("Alya is cool version 2"), listOf(id2))
         Assertions.assertEquals(chat.searchByText("Alya is cool"), listOf(id1, id2))
-        chat.delete(id2)
+        chat.deleteById(id2)
         Assertions.assertEquals(chat.searchByText("Alya"), listOf(id1))
     }
 }

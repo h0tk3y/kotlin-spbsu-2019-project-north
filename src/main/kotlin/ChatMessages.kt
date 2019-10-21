@@ -1,24 +1,24 @@
 data class ChatMessages(private val messageBase: MessageDao) : ChatMessageDao {
     private val messageList: MutableList<MessageId> = mutableListOf()
 
-    override fun get(elemId: MessageId): Message? {
+    override fun getById(elemId: MessageId): Message? {
         return if (messageList.contains(elemId)) {
-            messageBase.get(elemId)
+            messageBase.getById(elemId)
         } else {
             null
         }
     }
 
-    override fun add(elem: Message): MessageId {
-        val id = messageBase.add(elem)
+    override fun addWithNewId(elem: Message): MessageId {
+        val id = messageBase.addWithNewId(elem)
         messageList.add(id)
         return id
     }
 
-    override fun modify(elemId: MessageId, newElem: Message) = messageBase.modify(elemId, newElem)
+    override fun modifyById(elemId: MessageId, newElem: Message) = messageBase.modifyById(elemId, newElem)
 
-    override fun delete(elemId: MessageId) {
-        messageBase.delete(elemId)
+    override fun deleteById(elemId: MessageId) {
+        messageBase.deleteById(elemId)
         messageList.remove(elemId)
     }
 
@@ -26,7 +26,7 @@ data class ChatMessages(private val messageBase: MessageDao) : ChatMessageDao {
         get() = messageList.size
 
     override fun searchByText(text: String): List<MessageId> = messageList.filter {
-        messageBase.get(it)?.text?.contains(text) ?: false
+        messageBase.getById(it)?.text?.contains(text) ?: false
     }
 
     override fun getBlock(lastPos: Int?, blockSize: Int): List<MessageId> {
