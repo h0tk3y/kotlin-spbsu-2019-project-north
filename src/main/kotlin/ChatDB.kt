@@ -21,7 +21,7 @@ class ChatDB : ChatDao {
         get() = chats.size
 
     override fun getChatByInviteLink(link: String): ChatId? = chats.entries
-        .find { (it.value as? GroupChat)?.uniqueLink?.equals(link) ?: false }?.key
+        .find { (it.value as? GroupChat)?.uniqueLink == link }?.key
 
     override fun searchByName(name: String): List<ChatId> = chats.entries.mapNotNull {
         if ((it.value as? GroupChat)?.chatName == name) it.key else null
