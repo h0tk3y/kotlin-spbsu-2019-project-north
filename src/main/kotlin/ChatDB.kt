@@ -34,7 +34,7 @@ class ChatDB : ChatDao {
                 else null
             }
             is GroupChat -> {
-                if (chat.containsUser(userId)) it.key
+                if (chat.(userId)) it.key
                 else null
             }
             else -> null

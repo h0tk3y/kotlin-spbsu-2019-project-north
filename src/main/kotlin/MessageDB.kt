@@ -19,6 +19,26 @@ class MessageDB : MessageDao {
         base.remove(elemId)
     }
 
+    override fun findByUser(user: UserId): List<MessageId> = base.entries.mapNotNull {
+        if (it.value.from == user) {
+            it.key
+        } else {
+            null
+        }
+    }
+
+    override fun findSliceFromChat(chat: ChatId, block: Int, last: Int?): List<MessageId> {
+        val messages = base.entries.mapNotNull {
+            if (it.value.chat == chat) {
+                it.key
+            } else {
+                null
+            }
+        }
+        val pos = last ?: messages.size
+        return messages.subList(pos - block, pos - 1)
+    }
+
     override val size
         get() = base.size
 }
