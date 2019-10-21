@@ -55,7 +55,8 @@ fun main(args: Array<String>) {
                 val passHash = creds.passHash
                 when {
                     login == null || passHash == null ->
-                        call.respond(mapOf("status" to "Login or password is missing"))
+                        call.respond(JSONObject(mutableMapOf(Pair("status", "Login or password is missing"))))
+                        //call.respond(mapOf("status" to "Login or password is missing"), ContentType.Application.Json)
                     login in DB.keys && DB[login] == passHash -> {
                         val token = hashString(creds.toString() + curSessionNumber)
                         call.sessions.set(MySession(idByLogin[login], curSessionNumber++, token))
