@@ -10,7 +10,6 @@ import io.ktor.server.netty.*
 import io.ktor.sessions.*
 import io.ktor.util.Hash
 import io.ktor.util.toMap
-import jdk.nashorn.internal.objects.NativeDate.getUTCMilliseconds
 import org.json.simple.JSONObject
 import java.security.MessageDigest
 import java.time.Instant
