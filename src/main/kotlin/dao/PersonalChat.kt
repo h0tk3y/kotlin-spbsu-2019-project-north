@@ -1,3 +1,5 @@
+package dao
+
 import dao.UserId
 import model.Chat
 
