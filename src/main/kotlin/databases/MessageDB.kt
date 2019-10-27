@@ -41,7 +41,7 @@ class MessageDB : MessageDao {
             }
         }
         val pos = last ?: messages.size
-        return messages.subList(pos - block, pos - 1)
+        return messages.subList(pos - block, pos)
     }
 
     override val size
