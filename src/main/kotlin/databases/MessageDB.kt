@@ -1,3 +1,5 @@
+package databases
+
 import dao.*
 import model.Message
 

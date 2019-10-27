@@ -1,4 +1,5 @@
 import dao.*
+import databases.*
 import org.koin.dsl.module
 
 val daoModule = module {

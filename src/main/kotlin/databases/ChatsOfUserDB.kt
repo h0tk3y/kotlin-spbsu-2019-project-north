@@ -1,3 +1,5 @@
+package databases
+
 import dao.ChatId
 import dao.ChatsOfUserDao
 import dao.UserId

@@ -1,3 +1,5 @@
+package databases
+
 import dao.ChatDao
 import dao.ChatId
 import model.Chat

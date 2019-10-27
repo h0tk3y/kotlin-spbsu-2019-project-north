@@ -1,3 +1,5 @@
+package databases
+
 import dao.UserDao
 import dao.UserId
 import model.User
