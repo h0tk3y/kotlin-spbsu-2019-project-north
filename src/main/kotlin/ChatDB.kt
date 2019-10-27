@@ -26,20 +26,5 @@ class ChatDB : ChatDao {
     override fun searchByName(name: String): List<ChatId> = chats.entries.mapNotNull {
         if ((it.value as? GroupChat)?.chatName == name) it.key else null
     }
-
-    override fun searchWithUser(userId: UserId): List<ChatId> = chats.entries.mapNotNull {
-        when (val chat = it.value) {
-            is PersonalChat -> {
-                if (chat.member1 == userId || chat.member2 == userId) it.key
-                else null
-            }
-            is GroupChat -> {
-                if (chat.containsUser(userId)) it.key
-                else null
-            }
-            else -> null
-        }
-    }
-
 }
 

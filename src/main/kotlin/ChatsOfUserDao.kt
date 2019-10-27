@@ -1,0 +1,1 @@
+interface ChatsOfUserDao : RelationsDao<UserId, ChatId> {}
