@@ -8,6 +8,7 @@ class UserDbTest : DBTest {
     @Test
     fun addWithNewIdAndGetByIdTest() {
         val base: UserDao by inject()
+
         val user = User(
             123,
             "John",
@@ -17,6 +18,7 @@ class UserDbTest : DBTest {
             "qwerty"
         )
         val id = base.addWithNewId(user)
+
         Assertions.assertEquals(user, base.getById(id))
         Assertions.assertEquals(null, base.getById(id + 1))
     }
@@ -24,6 +26,7 @@ class UserDbTest : DBTest {
     @Test
     fun modifyByIdTest() {
         val base: UserDao by inject()
+
         val user1 = User(
             123,
             "John",
@@ -34,6 +37,7 @@ class UserDbTest : DBTest {
         )
         val id = base.addWithNewId(user1)
         Assertions.assertEquals(user1, base.getById(id))
+
         val user2 = User(
             124,
             "Joanna",
@@ -49,6 +53,7 @@ class UserDbTest : DBTest {
     @Test
     fun deleteByIdTest() {
         val base: UserDao by inject()
+
         val user = User(
             123,
             "John",
@@ -59,8 +64,10 @@ class UserDbTest : DBTest {
         )
         val id = base.addWithNewId(user)
         Assertions.assertEquals(user, base.getById(id))
+
         base.deleteById(id + 1)
         Assertions.assertEquals(user, base.getById(id))
+
         base.deleteById(id)
         Assertions.assertEquals(null, base.getById(id))
     }
@@ -69,6 +76,7 @@ class UserDbTest : DBTest {
     fun sizeTest() {
         val base: UserDao by inject()
         Assertions.assertEquals(0, base.size)
+
         val user1 = User(
             123,
             "John",
@@ -79,6 +87,7 @@ class UserDbTest : DBTest {
         )
         val id1 = base.addWithNewId(user1)
         Assertions.assertEquals(1, base.size)
+
         val user2 = User(
             124,
             "Joanna",
@@ -89,10 +98,13 @@ class UserDbTest : DBTest {
         )
         val id2 = base.addWithNewId(user2)
         Assertions.assertEquals(2, base.size)
+
         base.deleteById(id1)
         Assertions.assertEquals(1, base.size)
+
         base.deleteById(id1)
         Assertions.assertEquals(1, base.size)
+
         base.deleteById(id2)
         Assertions.assertEquals(0, base.size)
     }
