@@ -1,3 +1,7 @@
+import dao.ChatId
+import dao.MembersOfGroupChatDao
+import dao.UserId
+
 class MembersOfGroupChatDB : MembersOfGroupChatDao {
     private val base: MutableSet<Pair<ChatId, UserId>> = mutableSetOf()
     override fun add(key: ChatId, value: UserId): Boolean = base.add(key to value)

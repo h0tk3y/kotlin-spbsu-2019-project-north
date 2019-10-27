@@ -1,7 +1,7 @@
 package model
 
-import MessageDao
-import UserId
+import dao.MessageDao
+import dao.UserId
 
 data class GroupChat(
     val messageDB: MessageDao,

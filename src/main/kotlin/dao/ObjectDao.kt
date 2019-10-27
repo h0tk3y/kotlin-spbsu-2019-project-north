@@ -1,3 +1,5 @@
+package dao
+
 typealias Id = Long
 
 interface ObjectDao<T> {

@@ -1,3 +1,5 @@
+import dao.UserDao
+import dao.UserId
 import model.User
 
 class UserDB : UserDao {

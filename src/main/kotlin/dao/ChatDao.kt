@@ -1,3 +1,5 @@
+package dao
+
 import model.Chat
 
 typealias ChatId = Long

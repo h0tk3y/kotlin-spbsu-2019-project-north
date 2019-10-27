@@ -1,3 +1,5 @@
+package dao
+
 import model.Message
 
 typealias MessageId = Long

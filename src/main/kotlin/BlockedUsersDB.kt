@@ -1,3 +1,6 @@
+import dao.BlockedUsersDao
+import dao.UserId
+
 class BlockedUsersDB : BlockedUsersDao {
     private val base: MutableSet<Pair<UserId, UserId>> = mutableSetOf()
     override fun add(key: UserId, value: UserId): Boolean = base.add(key to value)

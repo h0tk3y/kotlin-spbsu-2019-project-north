@@ -1,6 +1,6 @@
 package model
 
-import Id
+import dao.Id
 
 interface Attachment {
     val id: Id

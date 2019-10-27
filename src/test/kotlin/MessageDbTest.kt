@@ -1,3 +1,4 @@
+import dao.MessageDao
 import model.Message
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

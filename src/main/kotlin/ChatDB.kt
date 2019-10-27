@@ -1,3 +1,5 @@
+import dao.ChatDao
+import dao.ChatId
 import model.Chat
 import model.GroupChat
 

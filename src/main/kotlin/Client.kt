@@ -1,3 +1,4 @@
+import dao.ChatId
 import model.User
 
 class Client (var user: User){

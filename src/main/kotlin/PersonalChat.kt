@@ -1,3 +1,4 @@
+import dao.UserId
 import model.Chat
 
 data class PersonalChat(

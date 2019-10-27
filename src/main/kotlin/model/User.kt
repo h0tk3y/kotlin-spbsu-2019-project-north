@@ -1,6 +1,6 @@
 package model
 
-import UserId
+import dao.UserId
 
 data class User(
     val id: UserId,

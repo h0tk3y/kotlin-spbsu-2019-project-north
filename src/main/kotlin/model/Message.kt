@@ -1,8 +1,8 @@
 package model
 
-import ChatId
-import MessageId
-import UserId
+import dao.ChatId
+import dao.MessageId
+import dao.UserId
 
 data class Message(
     val messageId: MessageId,

@@ -1,3 +1,5 @@
+package dao
+
 interface BlockedUsersDao : RelationsDao<UserId, UserId> {
     fun hasBlocked(user: UserId, potentiallyBlockedUser: UserId): Boolean =
         contains(user, potentiallyBlockedUser)

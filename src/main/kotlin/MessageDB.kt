@@ -1,3 +1,4 @@
+import dao.*
 import model.Message
 
 class MessageDB : MessageDao {
