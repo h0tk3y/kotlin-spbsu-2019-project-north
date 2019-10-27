@@ -1,6 +1,4 @@
-import java.util.*
-
 data class Contact(
-    var id: Long,
-    var name: String
+    val id: Long,
+    val name: String
 )

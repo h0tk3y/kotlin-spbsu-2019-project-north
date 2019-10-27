@@ -20,7 +20,7 @@ class GroupChatTest : KoinTest {
 
     @Test
     fun testAddUserPublicChat() {
-        val base: MessageDao by inject()
+        val base: MessageObjectDao by inject()
         val chat = GroupChat(base, 0, "kek", null)
         Assertions.assertEquals(1, chat.countUsers)
         Assertions.assertTrue(chat.addUser(1, null))
@@ -31,7 +31,7 @@ class GroupChatTest : KoinTest {
 
     @Test
     fun testAddUserPrivateChat() {
-        val base: MessageDao by inject()
+        val base: MessageObjectDao by inject()
         val chat = GroupChat(base, 0, "lol", "sm.me/lolabacabadaba")
         Assertions.assertEquals(1, chat.countUsers)
         Assertions.assertFalse(chat.addUser(1, null))
@@ -46,7 +46,7 @@ class GroupChatTest : KoinTest {
 
     @Test
     fun testLeave() {
-        val base: MessageDao by inject()
+        val base: MessageObjectDao by inject()
         val chat = GroupChat(base, 0, "kek", null)
         chat.addUser(1)
         Assertions.assertEquals(2, chat.countUsers)

@@ -1,4 +1,4 @@
-class Message(
+data class Message(
     val messageId: MessageId,
     val from: UserId,
     val chat: ChatId,
