@@ -1,6 +1,6 @@
 typealias ChatId = Long
 
-interface ChatDao : Dao<Chat> {
+interface ChatDao : ObjectDao<Chat> {
     fun getChatByInviteLink(link: String) : ChatId?
     fun searchByName(name: String): List<ChatId>
     fun searchWithUser(userId: UserId): List<ChatId>

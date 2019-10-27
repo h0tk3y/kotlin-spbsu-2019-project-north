@@ -1,2 +1,2 @@
-interface AttachmentDao : Dao<Attachment> {
+interface AttachmentDao : ObjectDao<Attachment> {
 }
