@@ -1,3 +1,5 @@
+import model.User
+
 class UserDB : UserDao {
     private val users: MutableMap<UserId, User> = mutableMapOf()
 

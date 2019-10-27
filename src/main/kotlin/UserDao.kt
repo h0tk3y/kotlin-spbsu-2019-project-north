@@ -1,3 +1,5 @@
+import model.User
+
 typealias UserId = Long
 interface UserDao : ObjectDao<User> {
     fun searchByName(name: String): List<UserId>

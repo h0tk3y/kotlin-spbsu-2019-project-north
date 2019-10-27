@@ -1,3 +1,5 @@
+import model.Message
+
 class MessageDB : MessageDao {
     private val base: MutableMap<MessageId, Message> = hashMapOf()
 

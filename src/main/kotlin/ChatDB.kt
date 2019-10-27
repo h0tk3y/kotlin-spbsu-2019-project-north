@@ -1,3 +1,6 @@
+import model.Chat
+import model.GroupChat
+
 class ChatDB : ChatDao {
     private val chats = hashMapOf<ChatId, Chat>()
 
