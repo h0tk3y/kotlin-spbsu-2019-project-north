@@ -1,3 +1,7 @@
+package dao
+
+import model.Chat
+
 typealias ChatId = Long
 
 interface ChatDao : ObjectDao<Chat> {

@@ -1,3 +1,7 @@
+package dao
+
+import model.Message
+
 typealias MessageId = Long
 
 interface MessageDao : ObjectDao<Message> {

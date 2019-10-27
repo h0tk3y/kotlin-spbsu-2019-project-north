@@ -1,3 +1,9 @@
+package model
+
+import dao.ChatId
+import dao.MessageId
+import dao.UserId
+
 data class Message(
     val messageId: MessageId,
     val from: UserId,

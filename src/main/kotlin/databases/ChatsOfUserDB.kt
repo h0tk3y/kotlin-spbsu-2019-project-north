@@ -1,3 +1,9 @@
+package databases
+
+import dao.ChatId
+import dao.ChatsOfUserDao
+import dao.UserId
+
 class ChatsOfUserDB : ChatsOfUserDao {
     private val base: MutableSet<Pair<UserId, ChatId>> = mutableSetOf()
     override fun add(key: UserId, value: ChatId): Boolean = base.add(key to value)

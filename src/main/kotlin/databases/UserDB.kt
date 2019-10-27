@@ -1,3 +1,9 @@
+package databases
+
+import dao.UserDao
+import dao.UserId
+import model.User
+
 class UserDB : UserDao {
     private val users: MutableMap<UserId, User> = mutableMapOf()
 

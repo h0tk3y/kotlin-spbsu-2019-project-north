@@ -1,3 +1,10 @@
+package databases
+
+import dao.ChatDao
+import dao.ChatId
+import model.Chat
+import model.GroupChat
+
 class ChatDB : ChatDao {
     private val chats = hashMapOf<ChatId, Chat>()
 

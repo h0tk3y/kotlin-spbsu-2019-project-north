@@ -1,3 +1,7 @@
+package model
+
+import dao.UserId
+
 data class User(
     val id: UserId,
     val name: String,
