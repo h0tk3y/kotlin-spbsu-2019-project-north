@@ -24,33 +24,6 @@ class UserDbTest : DBTest {
     }
 
     @Test
-    fun modifyByIdTest() {
-        val base: UserDao by inject()
-
-        val user1 = User(
-            123,
-            "John",
-            "john@smith.com",
-            "+3(938)781-23-57",
-            "JohnSmith",
-            "qwerty"
-        )
-        val id = base.addWithNewId(user1)
-        Assertions.assertEquals(user1, base.getById(id))
-
-        val user2 = User(
-            124,
-            "Joanna",
-            "jonanna@clock.org",
-            "+9(042)222-33-44",
-            "JoannaClock",
-            "123456"
-        )
-        base.modifyById(id, user2)
-        Assertions.assertEquals(user2, base.getById(id))
-    }
-
-    @Test
     fun deleteByIdTest() {
         val base: UserDao by inject()
 
