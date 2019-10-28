@@ -16,10 +16,6 @@ class ChatDB : ChatDao {
 
     override fun getById(elemId: ChatId): Chat? = chats[elemId]
 
-    override fun modifyById(elemId: ChatId, newElem: Chat) {
-        chats[elemId] = newElem
-    }
-
     override fun deleteById(elemId: ChatId) {
         chats.remove(elemId)
     }

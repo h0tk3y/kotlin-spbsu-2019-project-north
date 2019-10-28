@@ -12,10 +12,6 @@ class MessageDB : MessageDao {
         return id
     }
 
-    override fun modifyById(elemId: Id, newElem: Message) {
-        base[elemId] = newElem
-    }
-
     override fun getById(elemId: Id): Message? {
         return base[elemId]
     }

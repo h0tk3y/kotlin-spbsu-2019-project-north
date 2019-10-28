@@ -15,10 +15,6 @@ class UserDB : UserDao {
 
     override fun getById(elemId: UserId): User? = users[elemId]
 
-    override fun modifyById(elemId: UserId, newElem: User) {
-        users[elemId] = newElem
-    }
-
     override fun deleteById(elemId: UserId) {
         users.remove(elemId)
     }
