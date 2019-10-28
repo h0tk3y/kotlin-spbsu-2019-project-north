@@ -9,4 +9,5 @@ val daoModule = module {
     single<ChatsOfUserDao> { ChatsOfUserDB() }
     single<BlockedUsersDao> { BlockedUsersDB() }
     single<MembersOfGroupChatDao> { MembersOfGroupChatDB() }
+    single<ContactsOfUserDao> { ContactsOfUserDB() }
 }
