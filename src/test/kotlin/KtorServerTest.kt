@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-suspend fun testLogin() {
-    val client = HttpClient()
-    val DB = mutableMapOf<String, Int>("log" to "pass".hashCode())
-    val request = client.post<JSONObject> {
-        url("http://127.0.0.1:8080/login")
-        body = Credentials("log", "pass".hashCode())
-    }
-    print(request.toJSONString())
-}
+//suspend fun testLogin() {
+//    val client = HttpClient()
+//    val DB = mutableMapOf<String, Int>("log" to "pass".hashCode())
+//    val request = client.post<JSONObject> {
+//        url("http://127.0.0.1:8080/login")
+//        body = Credentials("log", "pass".hashCode())
+//    }
+//    print(request.toJSONString())
+//}
 
 class KtorServerTest {
     @Test
@@ -30,6 +30,6 @@ class KtorServerTest {
 }
 
 suspend fun main() {
-    testLogin()
+    //testLogin()
     println("§")
 }
