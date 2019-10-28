@@ -1,9 +1,7 @@
 import dao.MessageDao
-import model.Message
 import dao.ChatDao
-import model.Chat
 import model.GroupChat
-import dao.PersonalChat
+import model.PersonalChat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject

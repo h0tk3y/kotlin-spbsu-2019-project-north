@@ -1,4 +1,4 @@
-package dao
+package model
 
 import dao.UserId
 import model.Chat
