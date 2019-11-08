@@ -1,4 +1,3 @@
-import dao.ChatsOfUserDao
 import dao.ContactsOfUserDao
 import model.Contact
 import org.junit.jupiter.api.Assertions
