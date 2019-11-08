@@ -6,9 +6,9 @@ import io.ktor.auth.UserPasswordCredential
 import model.User
 
 class UserDB : UserDao {
-    override fun getUserByCredentials(credential: UserPasswordCredential): User? {
-        return users.entries.find { it.value.name == credential.name && it.value.password == credential.password }?.value
-    }
+    override fun getUserByCredentials(credential: UserPasswordCredential): User? = users.entries
+        .find { it.value.name == credential.name && it.value.password == credential.password }?.value
+
 
     private val users: MutableMap<UserId, User> = mutableMapOf()
 
