@@ -1,9 +1,11 @@
 package model
 
 import dao.ChatId
+import dao.MessageId
 import dao.UserId
 
 data class Message(
+    val id: MessageId,
     val from: UserId,
     val chat: ChatId,
     var text: String,

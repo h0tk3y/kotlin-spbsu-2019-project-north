@@ -1,13 +1,14 @@
 package model
 
 import dao.Id
+import dao.UserId
 
 class Contact(
-    val id: Id,
+    val userId: UserId,
     val name: String
 ) {
     override fun equals(other: Any?): Boolean =
-        (other as? Contact)?.id == id
+        (other as? Contact)?.userId == userId
 
-    override fun hashCode(): Int = id.hashCode()
+    override fun hashCode(): Int = userId.hashCode()
 }

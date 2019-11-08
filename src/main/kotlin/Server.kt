@@ -36,7 +36,7 @@ class Server : KoinComponent {
 
     fun sendMessage(chatId: ChatId, from: UserId, text: String) {
         val time = System.currentTimeMillis()
-        val id = messageBase.addWithNewId(Message(from, chatId, text, time))
+        val id = messageBase.addNewMessage(from, chatId, text, time)
 
     }
 

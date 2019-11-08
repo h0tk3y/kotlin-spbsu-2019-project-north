@@ -18,6 +18,10 @@ import io.ktor.routing.routing
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
 
+fun main() {
+//    val server =
+}
+
 fun Application.main() {
     MessengerApplication().apply { main() }
 }
