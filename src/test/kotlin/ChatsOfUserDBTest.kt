@@ -1,9 +1,4 @@
-import dao.BlockedUsersDao
 import dao.ChatsOfUserDao
-import dao.MessageDao
-import dao.RelationsDao
-import model.GroupChat
-import model.PersonalChat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
