@@ -1,6 +1,7 @@
 package model
 
 import dao.UserId
+import io.ktor.auth.Principal
 
 data class User(
     val id: UserId,
@@ -9,4 +10,4 @@ data class User(
     val phoneNumber: String,
     var login: String,
     var password: String
-)
+) : Principal
