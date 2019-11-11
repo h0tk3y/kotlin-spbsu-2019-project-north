@@ -1,4 +1,5 @@
 import dao.UserDao
+import dao.UserId
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -57,43 +58,22 @@ class MessengerApplication {
                 }
             }
             authenticate {
-                val getByIdRequestsList= mapOf(
+                val getByIdRequestsMap: Map<String, (Server, UserId) -> List<Any>> = mapOf(
                     "/getChats" to Server::getChats,
                     "/getPersonalChats" to Server::getPersonalChats,
                     "/getGroupChats" to Server::getGroupChats,
                     "/getContacts" to Server::getContacts,
                     "/getChatMessages" to Server::getChatMessages
                 )
-                get("/getChats") {
-                    when (val id = call.parameters["id"]?.toLong()) {
-                        null -> call.respond(HttpStatusCode.Forbidden, "Invalid id")
-                        else -> call.respond(HttpStatusCode.OK, server.getChats(id))
+                for ((path, function) in getByIdRequestsMap) {
+                    get(path) {
+                        when (val id = call.parameters["id"]?.toLong()) {
+                            null -> call.respond(HttpStatusCode.Forbidden, "Invalid id")
+                            else -> call.respond(HttpStatusCode.OK, function(server, id))
+                        }
                     }
                 }
-                get("/getPersonalChats") {
-                    when (val id = call.parameters["id"]?.toLong()) {
-                        null -> call.respond(HttpStatusCode.Forbidden, "Invalid id")
-                        else -> call.respond(HttpStatusCode.OK, server.getPersonalChats(id))
-                    }
-                }
-                get("/getGroupChats") {
-                    when (val id = call.parameters["id"]?.toLong()) {
-                        null -> call.respond(HttpStatusCode.Forbidden, "Invalid id")
-                        else -> call.respond(HttpStatusCode.OK, server.getGroupChats(id))
-                    }
-                }
-                get("/getContacts") {
-                    when (val id = call.parameters["id"]?.toLong()) {
-                        null -> call.respond(HttpStatusCode.Forbidden, "Invalid id")
-                        else -> call.respond(HttpStatusCode.OK, server.getContacts(id))
-                    }
-                }
-                get("/getChatMessages") {
-                    when (val id = call.parameters["id"]?.toLong()) {
-                        null -> call.respond(HttpStatusCode.Forbidden, "Invalid id")
-                        else -> call.respond(HttpStatusCode.OK, server.getChatMessages(id))
-                    }
-                }
+
                 // Sending messages etc.
             }
         }
