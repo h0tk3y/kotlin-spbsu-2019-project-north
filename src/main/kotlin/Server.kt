@@ -20,7 +20,9 @@ class Server : KoinComponent {
         //return token
     }
 
-    fun register(userId: UserId) {}
+    fun register(user: User) {
+
+    }
     fun getUserByCredentials(credentials: UserPasswordCredential): User? = userBase.getUserByCredentials(credentials)
 
     fun getChats(userId: UserId): List<ChatId> = chatsOfUserBase.select(userId)
