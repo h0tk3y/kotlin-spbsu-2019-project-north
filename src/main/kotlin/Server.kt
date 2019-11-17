@@ -42,16 +42,11 @@ class Server : KoinComponent {
     }
 
     fun createGroupChat(userId: UserId, name: String): ChatId {
-        val id = chatBase.addWithNewId(GroupChat(userId, name))
-        chatsOfUserBase.add(userId, id)
-        return id
+        TODO()
     }
 
     fun createPersonalChat(user1: UserId, user2: UserId): ChatId {
-        val id = chatBase.addWithNewId(PersonalChat(user1, user2))
-        chatsOfUserBase.add(user1, id)
-        chatsOfUserBase.add(user2, id)
-        return id
+        TODO()
     }
 
 
