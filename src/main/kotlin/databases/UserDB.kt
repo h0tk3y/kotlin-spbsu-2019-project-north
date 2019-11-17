@@ -50,5 +50,11 @@ class UserDB : UserDao {
 
     override fun getByPhoneNumber(phoneNumber: String) =
         transaction { User.find { Users.phoneNumber eq phoneNumber } }.firstOrNull()
+
+    override fun updateName(userId: UserId, newName: String) =
+        transaction { User.findById(userId)?.name = newName }
+
+    override fun updateEmail(userId: UserId, newEmail: String) =
+        transaction { User.findById(userId)?.email == newEmail }
 }
 
