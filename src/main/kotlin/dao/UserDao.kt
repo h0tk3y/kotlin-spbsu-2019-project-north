@@ -12,5 +12,6 @@ interface UserDao : ObjectDao<User> {
     fun getByPhoneNumber(phoneNumber: String): User?
     fun getUserByCredentials(credential: UserPasswordCredential): User?
     fun updateName(userId: UserId, newName: String)
-    fun updateEmail(userId: UserId, newEmail: String) : Boolean
+    fun updateEmail(userId: UserId, newEmail: String): Boolean
+    fun existsLogin(login: String): Boolean
 }

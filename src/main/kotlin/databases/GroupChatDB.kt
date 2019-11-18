@@ -4,6 +4,7 @@ import dao.GroupChatDao
 import dao.Id
 import dao.UserId
 import model.GroupChat
+import model.User
 import org.jetbrains.exposed.sql.transactions.transaction
 import tables.GroupChats
 
@@ -11,8 +12,9 @@ import tables.GroupChats
 class GroupChatDB : GroupChatDao {
     override fun addNewGroupChat(owner: UserId, chatName: String, uniqueLink: String?) =
         transaction {
+            val ownerID = User.findById(owner)?.id ?: return@transaction null
             GroupChat.new {
-                this.owner = owner
+                this.owner = ownerID
                 this.chatName = chatName
                 this.uniqueLink = uniqueLink
             }
