@@ -4,6 +4,14 @@ import dao.*
 import model.Message
 
 class MessageDB : MessageDao {
+    override fun addNewMessage(from: UserId, chat: ChatId, text: String, time: Long): MessageId {
+        return getNewId().also {
+            base[it] = Message(it, from, chat, text, time)
+        }
+    }
+
+    override fun getNewId(): Id = base.size.toLong()
+
     private val base: MutableMap<MessageId, Message> = hashMapOf()
 
     override fun addWithNewId(elem: Message): Id {

@@ -40,7 +40,6 @@ class ChatDbTest : DBTest {
         val messageBase: MessageDao by inject()
 
         val chat2 = GroupChat(
-            messageBase,
             1,
             "Kotlin project team North",
             "fgvsdfeg"
@@ -68,7 +67,6 @@ class ChatDbTest : DBTest {
         val messageBase: MessageDao by inject()
 
         val chat2 = GroupChat(
-            messageBase,
             1,
             "Kotlin project team North",
             "pass"
@@ -76,7 +74,6 @@ class ChatDbTest : DBTest {
         val id2 = base.addWithNewId(chat2)
 
         val chat3 = GroupChat(
-            messageBase,
             1,
             "Kotlin project team North",
             "ketyz"
@@ -99,7 +96,6 @@ class ChatDbTest : DBTest {
         val messageBase: MessageDao by inject()
 
         val chat2 = GroupChat(
-            messageBase,
             1,
             "Kotlin project team North",
             "pass"
@@ -107,7 +103,6 @@ class ChatDbTest : DBTest {
         val id2 = base.addWithNewId(chat2)
 
         val chat3 = GroupChat(
-            messageBase,
             1,
             "Kotlin project team North",
             "ketyz"
@@ -115,7 +110,6 @@ class ChatDbTest : DBTest {
         val id3 = base.addWithNewId(chat3)
 
         val chat4 = GroupChat(
-            messageBase,
             1,
             "Kotlin project team South",
             "ketyz"

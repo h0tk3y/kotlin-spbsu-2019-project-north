@@ -1,4 +1,3 @@
 package model
 
-interface Chat {
-}
+interface Chat

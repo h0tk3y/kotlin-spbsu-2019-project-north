@@ -1,4 +1,5 @@
 import dao.UserDao
+import dao.UserId
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -13,10 +14,17 @@ import io.ktor.jackson.jackson
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.response.respondText
+import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
+import kotlin.reflect.KCallable
+import kotlin.reflect.KFunction
+
+fun main() {
+//    val server =
+}
 
 fun Application.main() {
     MessengerApplication().apply { main() }
@@ -32,25 +40,78 @@ class MessengerApplication {
             jackson {}
         }
 
-        val userDao: UserDao by inject()
+        val server = Server()
         install(Authentication) {
             jwt {
                 realm = JwtConfig.realm
                 verifier(JwtConfig.verifier)
-                validate { it.payload.getClaim("id").asLong()?.let(userDao::getById) }
+                validate { it.payload.getClaim("id").asLong()?.let(server.userBase::getById) }
             }
         }
 
         routing {
             post("login") {
                 val credentials = call.receive<UserPasswordCredential>()
-                when(val user = userDao.getUserByCredentials(credentials)) {
+                when(val user = server.getUserByCredentials(credentials)) {
                     null -> call.respond(HttpStatusCode.Forbidden, "Invalid login/password pair")
                     else -> call.respond(HttpStatusCode.OK, JwtConfig.makeToken(user))
                 }
             }
             authenticate {
-                // Sending messages etc.
+                val getByIdRequestsMap: Map<String, (Server, UserId) -> List<Any>> = mapOf(
+                    "/getChats" to Server::getChats,
+                    "/getPersonalChats" to Server::getPersonalChats,
+                    "/getGroupChats" to Server::getGroupChats,
+                    "/getContacts" to Server::getContacts
+                )
+                for ((path, function) in getByIdRequestsMap) {
+                    get(path) {
+                        when (val id = call.parameters["userId"]?.toLong()) {
+                            null -> call.respond(HttpStatusCode.Forbidden, "Invalid id")
+                            else -> call.respond(HttpStatusCode.OK, function(server, id))
+                        }
+                    }
+                }
+                get("/getChatMessages") {
+                    when (val id = call.parameters["id"]?.toLong()) {
+                        null -> call.respond(HttpStatusCode.Forbidden, "Invalid id")
+                        else -> call.respond(HttpStatusCode.OK, server.getChatMessages(id))
+                    }
+                }
+                post("/sendMessage") {
+                    val chatId = call.parameters["chatId"]?.toLong()
+                    val userId = call.parameters["userId"]?.toLong()
+                    val text = call.parameters["text"]
+                    when (chatId) {
+                        null -> call.respond(HttpStatusCode.Forbidden, "Invalid chatId")
+                        else -> when (userId) {
+                            null -> call.respond(HttpStatusCode.Forbidden, "Invalid userId")
+                            else -> when (text) {
+                                null -> call.respond(HttpStatusCode.Forbidden, "Invalid text")
+                                else -> call.respond(HttpStatusCode.OK, server.sendMessage(chatId, userId, text))
+                            }
+                        }
+                    }
+                }
+                post("/createGroupChat") {
+                    val userId = call.parameters["userId"]?.toLong()
+                    val name = call.parameters["name"]
+                    when (userId) {
+                        null -> call.respond(HttpStatusCode.Forbidden, "Invalid userId")
+                        else -> when (name) {
+                            null -> call.respond(HttpStatusCode.Forbidden, "Invalid name")
+                            else -> call.respond(HttpStatusCode.OK, server.createGroupChat(userId, name))
+                        }
+                    }
+                }
+                post("/createPersonalChat") {
+                    val user1 = call.parameters["user1"]?.toLong()
+                    val user2 = call.parameters["user2"]?.toLong()
+                    if (user1 == null || user2 == null)
+                        call.respond(HttpStatusCode.Forbidden, "Invalid userId")
+                    else
+                        call.respond(HttpStatusCode.OK, server.createPersonalChat(user1, user2))
+                }
             }
         }
     }
