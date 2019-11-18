@@ -13,7 +13,7 @@ class Server : KoinComponent {
     val groupChatBase: GroupChatDao by inject()
     val messageBase: MessageDao by inject()
     val blockedUsersBase: BlockedUsersDao by inject()
-    val chatsOfUserBase: ChatsOfUserDao by inject()
+    val groupChatsOfUserBase: GroupChatsOfUserDao by inject()
     val membersOfGroupChatBase: MembersOfGroupChatDao by inject()
     val contactsOfUserBase: ContactsOfUserDao by inject()
 
@@ -27,7 +27,7 @@ class Server : KoinComponent {
 
     fun getUserByCredentials(credentials: UserPasswordCredential): User? = userBase.getUserByCredentials(credentials)
 
-    fun getChats(userId: UserId): List<ChatId> = chatsOfUserBase.select(userId)
+    fun getChats(userId: UserId): List<ChatId> = groupChatsOfUserBase.select(userId)
     fun getPersonalChats(userId: UserId) = getChats(userId).mapNotNull { chatBase.getById(it) as? PersonalChat }
 
     fun getGroupChats(userId: UserId) = getChats(userId).mapNotNull { chatBase.getById(it) as? GroupChat }

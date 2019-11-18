@@ -1,12 +1,12 @@
-import dao.ChatsOfUserDao
+import dao.GroupChatsOfUserDao
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
 
-class ChatsOfUserDBTest : DBTest {
+class GroupChatsOfUserDBTest : DBTest {
     @Test
     fun addAndContainsTest() {
-        val base: ChatsOfUserDao by inject()
+        val base: GroupChatsOfUserDao by inject()
 
         base.add(1, 1)
         base.add(1, 2)
@@ -18,7 +18,7 @@ class ChatsOfUserDBTest : DBTest {
 
     @Test
     fun removeTest() {
-        val base: ChatsOfUserDao by inject()
+        val base: GroupChatsOfUserDao by inject()
 
         base.add(1, 1)
         base.add(1, 2)
@@ -31,7 +31,7 @@ class ChatsOfUserDBTest : DBTest {
 
     @Test
     fun selectTest() {
-        val base: ChatsOfUserDao by inject()
+        val base: GroupChatsOfUserDao by inject()
 
         base.add(1, 1)
         base.add(1, 2)
