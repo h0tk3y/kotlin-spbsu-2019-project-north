@@ -6,7 +6,7 @@ import model.User
 typealias UserId = Long
 
 interface UserDao : ObjectDao<User> {
-    fun addNewUser(name: String, email: String, phoneNumber: String, login: String, password: String): UserId
+    fun addNewUser(name: String, email: String, phoneNumber: String, login: String, password: String): User
     fun searchByName(name: String): List<User>
     fun getByEmail(email: String): User?
     fun getByPhoneNumber(phoneNumber: String): User?

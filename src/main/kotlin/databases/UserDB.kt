@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import tables.Users
 
 class UserDB : UserDao {
-    override fun addNewUser(name: String, email: String, phoneNumber: String, login: String, password: String): UserId =
+    override fun addNewUser(name: String, email: String, phoneNumber: String, login: String, password: String): User =
         transaction {
             User.new {
                 this.name = name
@@ -17,7 +17,7 @@ class UserDB : UserDao {
                 this.phoneNumber = phoneNumber
                 this.login = login
                 this.password = password
-            }.id.value
+            }
         }
 
 

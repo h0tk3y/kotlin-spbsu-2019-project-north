@@ -1,15 +1,18 @@
 package model
 
-import dao.ChatId
-import dao.MessageId
-import dao.UserId
+import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.dao.LongEntity
+import org.jetbrains.exposed.dao.LongEntityClass
+import tables.Messages
 
-data class Message(
-    val id: MessageId,
-    val from: UserId,
-    val chat: ChatId,
-    var text: String,
-    val time: Long,
-    var isDeleted: Boolean = false,
-    var isEdited: Boolean = false
-)
+class Message(id: EntityID<Long>) : LongEntity(id) {
+    companion object : LongEntityClass<Message>(Messages)
+
+    var from by Messages.from
+    var typeOfChat by Messages.typeOfChat
+    var chat by Messages.chat
+    var text by Messages.text
+    var dateTime by Messages.dateTime
+    var isDeleted by Messages.isDeleted
+    var isEdited by Messages.isEdited
+}
