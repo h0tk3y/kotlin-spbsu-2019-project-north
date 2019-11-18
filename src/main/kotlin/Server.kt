@@ -21,7 +21,7 @@ class Server : KoinComponent {
         //return token
     }
 
-    fun register(user: User) {
+    fun register(name: String, email: String, phoneNumber: String, login: String, password: String) : User {
 
     }
 

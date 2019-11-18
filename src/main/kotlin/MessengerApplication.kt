@@ -12,6 +12,7 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.request.receive
+import io.ktor.request.receiveParameters
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.get
@@ -50,11 +51,45 @@ class MessengerApplication {
         }
 
         routing {
-            post("login") {
+            post("/login") {
                 val credentials = call.receive<UserPasswordCredential>()
                 when(val user = server.getUserByCredentials(credentials)) {
                     null -> call.respond(HttpStatusCode.Forbidden, "Invalid login/password pair")
                     else -> call.respond(HttpStatusCode.OK, JwtConfig.makeToken(user))
+                }
+            }
+            post("/register") {
+                val name = call.parameters["name"]
+                val email = call.parameters["email"]
+                val phoneNumber = call.parameters["phoneNumber"]
+                val login = call.parameters["login"]
+                val password = call.parameters["password"]
+                when (name) {
+                    null -> call.respond(HttpStatusCode.Forbidden, "Invalid name")
+                    else -> when {
+                        email == null -> call.respond(HttpStatusCode.Forbidden, "Invalid email")
+                        !email.contains('@') -> call.respond(HttpStatusCode.Forbidden, "Incorrect email")
+                        else -> when {
+                            phoneNumber == null -> call.respond(HttpStatusCode.Forbidden, "Invalid email")
+                            phoneNumber.chars().anyMatch(Character::isLetter) ->
+                                call.respond(HttpStatusCode.Forbidden, "Incorrect phone number")
+                            else -> when {
+                                login == null -> call.respond(HttpStatusCode.Forbidden, "Invalid login")
+                                //TODO check if user with such login already exists
+                                else -> when {
+                                    password == null ->
+                                        call.respond(HttpStatusCode.Forbidden, "Invalid password")
+                                    password.length < 6 ->
+                                        call.respond(HttpStatusCode.Forbidden, "Password is too short")
+                                    else -> call.respond(HttpStatusCode.OK,
+                                        {
+                                            val user = server.register(name, email, phoneNumber, login, password)
+                                            JwtConfig.makeToken(user)
+                                        })
+                                }
+                            }
+                        }
+                    }
                 }
             }
             authenticate {
