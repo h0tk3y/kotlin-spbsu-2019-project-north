@@ -31,5 +31,5 @@ class GroupChatDB : GroupChatDao {
         transaction { GroupChat.find { GroupChats.chatName eq name } }.toList()
 
     override fun getChatByInviteLink(link: String) =
-        transaction { GroupChat.find { GroupChats.uniqueLink eq link } }.firstOrNull()
+        transaction { GroupChat.find { GroupChats.uniqueLink eq link } }.singleOrNull()
 }

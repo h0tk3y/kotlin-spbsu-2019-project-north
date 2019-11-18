@@ -26,7 +26,7 @@ class UserDB : UserDao {
             User.find {
                 (Users.login eq credential.name) and (Users.password eq credential.password)
             }
-        }.firstOrNull()
+        }.singleOrNull()
 
 
     override fun getById(elemId: UserId): User? =
@@ -46,10 +46,10 @@ class UserDB : UserDao {
         transaction { User.find { Users.name eq name } }.toList()
 
     override fun getByEmail(email: String) =
-        transaction { User.find { Users.email eq email } }.firstOrNull()
+        transaction { User.find { Users.email eq email } }.singleOrNull()
 
     override fun getByPhoneNumber(phoneNumber: String) =
-        transaction { User.find { Users.phoneNumber eq phoneNumber } }.firstOrNull()
+        transaction { User.find { Users.phoneNumber eq phoneNumber } }.singleOrNull()
 
     override fun updateName(userId: UserId, newName: String) =
         transaction { User.findById(userId)?.name = newName }

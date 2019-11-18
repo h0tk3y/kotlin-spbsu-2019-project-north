@@ -7,7 +7,7 @@ object Messages : LongIdTable() {
     val from = long("from")
     val typeOfChat = bool("type of chat")
     val chat = long("chat")
-    val text = varchar("text", 50)
+    val text = text("text")
     val dateTime = datetime("dateTime")
     val isDeleted = bool("isDeleted")
     val isEdited = bool("isEdited")

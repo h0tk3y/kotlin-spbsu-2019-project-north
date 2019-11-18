@@ -9,7 +9,8 @@ import org.koin.core.inject
 
 class Server : KoinComponent {
     val userBase: UserDao by inject()
-    val chatBase: ChatDao by inject()
+    val personalChatBase: PersonalChatDao by inject()
+    val groupChatBase: GroupChatDao by inject()
     val messageBase: MessageDao by inject()
     val blockedUsersBase: BlockedUsersDao by inject()
     val chatsOfUserBase: ChatsOfUserDao by inject()
@@ -23,6 +24,7 @@ class Server : KoinComponent {
     fun register(user: User) {
 
     }
+
     fun getUserByCredentials(credentials: UserPasswordCredential): User? = userBase.getUserByCredentials(credentials)
 
     fun getChats(userId: UserId): List<ChatId> = chatsOfUserBase.select(userId)
@@ -32,19 +34,19 @@ class Server : KoinComponent {
 
     fun getContacts(userId: UserId) = contactsOfUserBase.select(userId)
 
-    fun getChatMessages(id: ChatId): List<Message> {
+    fun getChatMessages(id: Id): List<Message> {
         return emptyList()
     }
 
-    fun sendMessage(chatId: ChatId, from: UserId, text: String) {
+    fun sendMessage(chatId: Id, from: UserId, text: String) {
         TODO()
     }
 
-    fun createGroupChat(userId: UserId, name: String): ChatId {
+    fun createGroupChat(userId: UserId, name: String): Id {
         TODO()
     }
 
-    fun createPersonalChat(user1: UserId, user2: UserId): ChatId {
+    fun createPersonalChat(user1: UserId, user2: UserId): Id {
         TODO()
     }
 
