@@ -64,32 +64,10 @@ class MessengerApplication {
                 val phoneNumber = call.parameters["phoneNumber"]
                 val login = call.parameters["login"]
                 val password = call.parameters["password"]
-                when (name) {
-                    null -> call.respond(HttpStatusCode.Forbidden, "Invalid name")
-                    else -> when {
-                        email == null -> call.respond(HttpStatusCode.Forbidden, "Invalid email")
-                        !email.contains('@') -> call.respond(HttpStatusCode.Forbidden, "Incorrect email")
-                        else -> when {
-                            phoneNumber == null -> call.respond(HttpStatusCode.Forbidden, "Invalid email")
-                            phoneNumber.chars().anyMatch(Character::isLetter) ->
-                                call.respond(HttpStatusCode.Forbidden, "Incorrect phone number")
-                            else -> when {
-                                login == null -> call.respond(HttpStatusCode.Forbidden, "Invalid login")
-                                //TODO check if user with such login already exists
-                                else -> when {
-                                    password == null ->
-                                        call.respond(HttpStatusCode.Forbidden, "Invalid password")
-                                    password.length < 6 ->
-                                        call.respond(HttpStatusCode.Forbidden, "Password is too short")
-                                    else -> call.respond(HttpStatusCode.OK,
-                                        {
-                                            val user = server.register(name, email, phoneNumber, login, password)
-                                            JwtConfig.makeToken(user)
-                                        })
-                                }
-                            }
-                        }
-                    }
+                val registerUserInfo = server.register(name, email, phoneNumber, login, password)
+                when (val user = registerUserInfo.user) {
+                     null -> call.respond(HttpStatusCode.Forbidden, registerUserInfo.message!!)
+                     else -> call.respond(HttpStatusCode.OK, JwtConfig.makeToken(user))
                 }
             }
             authenticate {
