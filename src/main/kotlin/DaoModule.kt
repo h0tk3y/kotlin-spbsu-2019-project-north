@@ -7,7 +7,7 @@ val daoModule = module {
     single<UserDao> { UserDB() }
     single<PersonalChatDao> { PersonalChatDB() }
     single<GroupChatDao> { GroupChatDB() }
-    single<GroupChatsOfUserDao> { GroupChatsOfUserDB() }
+    single<GroupChatsOfUserDao> { GroupChatOfUserDB() }
     single<BlockedUsersDao> { BlockedUsersDB() }
     single<MembersOfGroupChatDao> { MembersOfGroupChatDB() }
     single<ContactsOfUserDao> { ContactsOfUserDB() }

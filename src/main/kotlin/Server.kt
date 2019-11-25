@@ -27,7 +27,7 @@ class Server : KoinComponent {
 
     fun getUserByCredentials(credentials: UserPasswordCredential): User? = userBase.getUserByCredentials(credentials)
 
-    fun getChats(userId: UserId): List<ChatId> = groupChatsOfUserBase.select(userId)
+    fun getChats(userId: UserId): List<GroupChatId> = groupChatsOfUserBase.select(userId)
     fun getPersonalChats(userId: UserId) = getChats(userId).mapNotNull { chatBase.getById(it) as? PersonalChat }
 
     fun getGroupChats(userId: UserId) = getChats(userId).mapNotNull { chatBase.getById(it) as? GroupChat }

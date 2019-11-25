@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
 
-class GroupChatsOfUserDBTest : DBTest {
+class GroupChatOfUserDBTest : DBTest {
     @Test
     fun addAndContainsTest() {
         val base: GroupChatsOfUserDao by inject()

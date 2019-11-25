@@ -12,7 +12,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import tables.GroupChatsToUsers
 import tables.getEntityID
 
-class GroupChatsOfUserDB : GroupChatsOfUserDao {
+class GroupChatOfUserDB : GroupChatsOfUserDao {
     override fun add(key: Long, value: GroupChatId): Boolean =
         transaction {
             val user = getEntityID<User>(key) ?: return@transaction null
@@ -34,7 +34,7 @@ class GroupChatsOfUserDB : GroupChatsOfUserDao {
 
     override fun select(key: UserId): List<GroupChatId> =
         transaction {
-            val keyId = getEntityID<GroupChat>(key) ?: return@transaction emptySized<GroupChatToUser>()
+            val keyId = getEntityID<User>(key) ?: return@transaction emptySized<GroupChatToUser>()
             GroupChatToUser.find { GroupChatsToUsers.userId eq keyId }
         }.map { it.chatId.value }
 
