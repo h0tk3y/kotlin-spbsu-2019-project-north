@@ -13,7 +13,7 @@ import tables.GroupChatsToUsers
 import tables.getEntityID
 
 class GroupChatOfUserDB : GroupChatsOfUserDao {
-    override fun add(key: Long, value: GroupChatId): Boolean =
+    override fun add(key: UserId, value: GroupChatId): Boolean =
         transaction {
             val user = getEntityID<User>(key) ?: return@transaction null
             val chat = getEntityID<GroupChat>(value) ?: return@transaction null
