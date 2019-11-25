@@ -12,6 +12,7 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.request.receive
+import io.ktor.request.receiveParameters
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.get
@@ -50,11 +51,23 @@ class MessengerApplication {
         }
 
         routing {
-            post("login") {
+            post("/login") {
                 val credentials = call.receive<UserPasswordCredential>()
                 when(val user = server.getUserByCredentials(credentials)) {
                     null -> call.respond(HttpStatusCode.Forbidden, "Invalid login/password pair")
                     else -> call.respond(HttpStatusCode.OK, JwtConfig.makeToken(user))
+                }
+            }
+            post("/register") {
+                val name = call.parameters["name"]
+                val email = call.parameters["email"]
+                val phoneNumber = call.parameters["phoneNumber"]
+                val login = call.parameters["login"]
+                val password = call.parameters["password"]
+                val registerUserInfo = server.register(name, email, phoneNumber, login, password)
+                when (val user = registerUserInfo.user) {
+                     null -> call.respond(HttpStatusCode.Forbidden, registerUserInfo.message!!)
+                     else -> call.respond(HttpStatusCode.OK, JwtConfig.makeToken(user))
                 }
             }
             authenticate {
