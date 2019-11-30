@@ -1,17 +1,9 @@
 import dao.UserDao
-import databases.UserDB
-import io.ktor.auth.UserPasswordCredential
-import model.User
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 import org.koin.test.inject
-import tables.Users
-import kotlin.test.assertEquals
 
 class UserDbTest : DBTest {
-
     @Test
     fun getUserByCredentialsTest() {
         val base: UserDao by inject()
@@ -24,7 +16,6 @@ class UserDbTest : DBTest {
             "123"
         )
         Assertions.assertEquals(4, 2 * 2)
-
 
 
 //        Assertions.assertEquals(user1, base.getUserByCredentials(UserPasswordCredential(user1.login, user1.password)))
