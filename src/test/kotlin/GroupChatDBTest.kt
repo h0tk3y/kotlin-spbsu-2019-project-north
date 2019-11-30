@@ -21,9 +21,9 @@ class GroupChatDBTest: DBTest {
         val chat1 = chats.addNewGroupChat(alya.id.value, "Alin chat", "knskcsa")
         val chat2 = chats.addNewGroupChat(239,"null", null)
 
-        Assertions.assertNotEquals(null, chat1)
+        Assertions.assertNotNull(chat1)
 
-        Assertions.assertEquals(null, chat2)
+        Assertions.assertNull(chat2)
     }
 
     @Test
@@ -41,14 +41,14 @@ class GroupChatDBTest: DBTest {
 
         val chat1 = chats.addNewGroupChat(alya.id.value, "Alin chat", "ajhbjakl")
 
-        Assertions.assertNotEquals(null, chat1?.id?.value)
+        Assertions.assertNotNull( chat1?.id?.value)
         if (chat1?.id?.value != null) {
             Assertions.assertEquals(chat1.id, chats.getById(chat1.id.value)?.id)
             Assertions.assertEquals(alya.id.value, chats.getById(chat1.id.value)?.owner?.value)
             Assertions.assertEquals("Alin chat", chats.getById(chat1.id.value)?.chatName)
         }
 
-        Assertions.assertEquals(null, chats.getById(239))
+        Assertions.assertNull(chats.getById(239))
     }
 
     @Test
@@ -66,13 +66,13 @@ class GroupChatDBTest: DBTest {
 
         val chat1 = chats.addNewGroupChat(alya.id.value, "Alin chat", "jaknaasx")
 
-        Assertions.assertNotEquals(null, chat1?.id?.value)
+        Assertions.assertNotNull(chat1?.id?.value)
         if (chat1?.id?.value != null) {
             Assertions.assertEquals(chat1.id, chats.getById(chat1.id.value)?.id)
 
             chats.deleteById(chat1.id.value)
 
-            Assertions.assertEquals(null, chats.getById(chat1.id.value)?.id)
+            Assertions.assertNull(chats.getById(chat1.id.value)?.id)
         }
     }
 
@@ -100,8 +100,8 @@ class GroupChatDBTest: DBTest {
         val chat1 = chats.addNewGroupChat(vanya.id.value, "Vanin chat", "oqlmcznka")
         val chat2 = chats.addNewGroupChat(antoha.id.value, "Antohin chat", "nvmbvhajekf")
 
-        Assertions.assertNotEquals(null, chat1?.id?.value)
-        Assertions.assertNotEquals(null, chat2?.id?.value)
+        Assertions.assertNotNull(chat1?.id?.value)
+        Assertions.assertNotNull(chat2?.id?.value)
 
         Assertions.assertEquals(2, chats.size)
         if (chat1?.id?.value != null)
@@ -177,6 +177,6 @@ class GroupChatDBTest: DBTest {
         Assertions.assertEquals(chat1?.id?.value, chats.getChatByInviteLink("1")?.id?.value)
         Assertions.assertEquals(chat2?.id?.value, chats.getChatByInviteLink("2")?.id?.value)
         Assertions.assertEquals(chat3?.id?.value, chats.getChatByInviteLink("3")?.id?.value)
-        Assertions.assertEquals(null, chats.getChatByInviteLink("4"))
+        Assertions.assertNull(chats.getChatByInviteLink("4"))
     }
 }

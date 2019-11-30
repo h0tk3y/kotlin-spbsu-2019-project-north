@@ -40,8 +40,8 @@ class GroupChatOfUserDBTest : DBTest {
         val chat1 = chats.addNewGroupChat(alya.id.value, "Alin chat", "knskcsa")
         val chat2 = chats.addNewGroupChat(vanya.id.value, "Vanin chat", "oqlmcznka")
 
-        Assertions.assertNotEquals(null, chat1?.id?.value)
-        Assertions.assertNotEquals(null, chat2?.id?.value)
+        Assertions.assertNotNull(chat1?.id?.value)
+        Assertions.assertNotNull(chat2?.id?.value)
 
         if (chat1?.id?.value != null) {
             Assertions.assertTrue(base.add(vanya.id.value, chat1.id.value))
@@ -88,7 +88,7 @@ class GroupChatOfUserDBTest : DBTest {
 
         val chat1 = chats.addNewGroupChat(alya.id.value, "Alin chat", "knskcsa")
 
-        Assertions.assertNotEquals(null, chat1?.id?.value)
+        Assertions.assertNotNull(chat1?.id?.value)
 
         if (chat1?.id?.value != null) {
             Assertions.assertTrue(base.add(vanya.id.value, chat1.id.value))
@@ -137,8 +137,8 @@ class GroupChatOfUserDBTest : DBTest {
         val chat1 = chats.addNewGroupChat(alya.id.value, "Alin chat", "knskcsa")
         val chat2 = chats.addNewGroupChat(vanya.id.value, "Vanin chat", "oqlmcznka")
 
-        Assertions.assertNotEquals(null, chat1?.id?.value)
-        Assertions.assertNotEquals(null, chat2?.id?.value)
+        Assertions.assertNotNull(chat1?.id?.value)
+        Assertions.assertNotNull(chat2?.id?.value)
 
         if (chat1?.id?.value != null)
             Assertions.assertTrue(base.add(vanya.id.value, chat1.id.value))
@@ -192,8 +192,8 @@ class GroupChatOfUserDBTest : DBTest {
         val chat1 = chats.addNewGroupChat(alya.id.value, "Alin chat", "knskcsa")
         val chat2 = chats.addNewGroupChat(vanya.id.value, "Vanin chat", "oqlmcznka")
 
-        Assertions.assertNotEquals(null, chat1?.id?.value)
-        Assertions.assertNotEquals(null, chat2?.id?.value)
+        Assertions.assertNotNull(chat1?.id?.value)
+        Assertions.assertNotNull(chat2?.id?.value)
 
         if (chat1?.id?.value != null) {
             Assertions.assertTrue(base.add(vanya.id.value, chat1.id.value))

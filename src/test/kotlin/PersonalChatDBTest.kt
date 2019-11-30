@@ -30,10 +30,10 @@ class PersonalChatTests: DBTest {
         val chat2 = chats.addNewPersonalChat(239, 30)
         val chat3 = chats.addNewPersonalChat(alya.id.value, 239)
 
-        Assertions.assertNotEquals(null, chat1)
+        Assertions.assertNotNull(chat1)
 
-        Assertions.assertEquals(null, chat2)
-        Assertions.assertEquals(null, chat3)
+        Assertions.assertNull(chat2)
+        Assertions.assertNull(chat3)
     }
 
     @Test
@@ -59,14 +59,14 @@ class PersonalChatTests: DBTest {
 
         val chat1 = chats.addNewPersonalChat(alya.id.value, vanya.id.value)
 
-        Assertions.assertNotEquals(null, chat1?.id?.value)
+        Assertions.assertNotNull( chat1?.id?.value)
         if (chat1?.id?.value != null) {
             Assertions.assertEquals(chat1.id, chats.getById(chat1.id.value)?.id)
             Assertions.assertEquals(alya.id.value, chats.getById(chat1.id.value)?.member1?.value)
             Assertions.assertEquals(vanya.id.value, chats.getById(chat1.id.value)?.member2?.value)
         }
 
-        Assertions.assertEquals(null, chats.getById(239))
+        Assertions.assertNull(chats.getById(239))
     }
 
     @Test
@@ -92,13 +92,13 @@ class PersonalChatTests: DBTest {
 
         val chat1 = chats.addNewPersonalChat(alya.id.value, vanya.id.value)
 
-        Assertions.assertNotEquals(null, chat1?.id?.value)
+        Assertions.assertNotNull(chat1?.id?.value)
         if (chat1?.id?.value != null) {
             Assertions.assertEquals(chat1.id, chats.getById(chat1.id.value)?.id)
 
             chats.deleteById(chat1.id.value)
 
-            Assertions.assertEquals(null, chats.getById(chat1.id.value)?.id)
+            Assertions.assertNull(chats.getById(chat1.id.value)?.id)
         }
 
     }
@@ -136,9 +136,9 @@ class PersonalChatTests: DBTest {
         val chat2 = chats.addNewPersonalChat(nikita.id.value, antoha.id.value)
         val chat3 = chats.addNewPersonalChat(antoha.id.value, vanya.id.value)
 
-        Assertions.assertNotEquals(null, chat1?.id?.value)
-        Assertions.assertNotEquals(null, chat2?.id?.value)
-        Assertions.assertNotEquals(null, chat3?.id?.value)
+        Assertions.assertNotNull(chat1?.id?.value)
+        Assertions.assertNotNull(chat2?.id?.value)
+        Assertions.assertNotNull(chat3?.id?.value)
 
         Assertions.assertEquals(3, chats.size)
         if (chat1?.id?.value != null)
