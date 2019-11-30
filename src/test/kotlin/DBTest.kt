@@ -25,13 +25,14 @@ interface DBTest : KoinTest {
             isConnected = true
         }
         transaction {
+            SchemaUtils.drop(BlockedUsers)
             SchemaUtils.drop(Contacts)
             SchemaUtils.drop(GroupChatsToUsers)
             SchemaUtils.drop(GroupChats)
             SchemaUtils.drop(Messages)
             SchemaUtils.drop(PersonalChats)
             SchemaUtils.drop(Users)
-            SchemaUtils.drop(BlockedUsers)
+
         }
         transaction {
             SchemaUtils.create(Users)
