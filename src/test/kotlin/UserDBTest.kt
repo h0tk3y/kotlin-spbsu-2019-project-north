@@ -222,38 +222,79 @@ class UserDbTest : DBTest {
             "123"
         )
 
-        base.updateName(alya.id.value, "Alya")
+        val vanya = base.addNewUser(
+            "Vanya",
+            "Vanya@gmail.com",
+            "8888888",
+            "olivva",
+            "8"
+        )
 
-        Assertions.assertEquals("Alya", alya.name)
+        base.updateName(vanya.id.value, "Sasha")
+        Assertions.assertEquals("Sasha", base.getById(vanya.id.value)?.name)
+
+        base.updateName(alya.id.value, "Alya")
+        base.updateName(vanya.id.value, "Vanya")
+
+        Assertions.assertEquals("Alya", base.getById(alya.id.value)?.name)
+        Assertions.assertEquals("Vanya", base.getById(vanya.id.value)?.name)
+
     }
 
-//    @Test
-//    fun updateEmailTest() {
-//
-//        val base: UserDao by inject()
-//
-//        val alya = base.addNewUser(
-//            "Alya",
-//            "Alya@gmail.com",
-//            "1234567",
-//            "Pingwin",
-//            "123"
-//        )
+    @Test
+    fun updateEmailTest() {
 
-//        base.updateName(alya.id.value, "Alya")
+        val base: UserDao by inject()
 
-//        Assertions.assertEquals()
+        val alya = base.addNewUser(
+            "Alya",
+            "Alya@gmail.com",
+            "1234567",
+            "Pingwin",
+            "123"
+        )
 
-//    }
+        val vanya = base.addNewUser(
+            "Vanya",
+            "Vanya@gmail.com",
+            "8888888",
+            "olivva",
+            "8"
+        )
 
-//    @Test
-//    fun existsLoginTest() {
-//
-//        val base: UserDao by inject()
-//
-//
-//
-//        Assertions.assertEquals()
-//
-//    }
+        base.updateEmail(alya.id.value, "kek@gmail.com")
+        base.updateEmail(vanya.id.value, "Alya@gmail.com")
+
+        Assertions.assertEquals("kek@gmail.com", base.getById(alya.id.value)?.email)
+        Assertions.assertEquals("Alya@gmail.com", base.getById(vanya.id.value)?.email)
+
+    }
+
+    @Test
+    fun existsLoginTest() {
+
+        val base: UserDao by inject()
+
+        val alya = base.addNewUser(
+            "Alya",
+            "Alya@gmail.com",
+            "1234567",
+            "Pingwin",
+            "123"
+        )
+
+        val vanya = base.addNewUser(
+            "Vanya",
+            "Vanya@gmail.com",
+            "8888888",
+            "olivva",
+            "8"
+        )
+
+        Assertions.assertTrue(base.existsLogin("Pingwin"))
+        Assertions.assertTrue(base.existsLogin("olivva"))
+        Assertions.assertFalse(base.existsLogin("Bober"))
+
+
+    }
 }
