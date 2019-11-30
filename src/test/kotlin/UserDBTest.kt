@@ -62,7 +62,7 @@ class UserDbTest : DBTest {
         Assertions.assertEquals(antoha.id, base.getById(antoha.id.value)?.id)
         Assertions.assertEquals(antoha.password, base.getById(antoha.id.value)?.password)
 
-        Assertions.assertEquals(null, base.getById(239))
+        Assertions.assertNull(base.getById(239))
 
     }
 
@@ -92,8 +92,8 @@ class UserDbTest : DBTest {
         base.deleteById(alya2.id.value)
         base.deleteById(239)
 
-        Assertions.assertEquals(null, base.getUserByCredentials(UserPasswordCredential(alya2.login, alya2.password))?.id)
-        Assertions.assertEquals(null, base.getUserByCredentials(UserPasswordCredential("kek", "lol")))
+        Assertions.assertNull( base.getUserByCredentials(UserPasswordCredential(alya2.login, alya2.password))?.id)
+        Assertions.assertNull( base.getUserByCredentials(UserPasswordCredential("kek", "lol")))
         Assertions.assertEquals(alya.id, base.getUserByCredentials(UserPasswordCredential(alya.login, alya.password))?.id)
 
     }
@@ -186,7 +186,7 @@ class UserDbTest : DBTest {
         )
 
         Assertions.assertEquals(alya.id, base.getByEmail("Alya@gmail.com")?.id)
-        Assertions.assertEquals(null, base.getByEmail("kek@gmail.com"))
+        Assertions.assertNull( base.getByEmail("kek@gmail.com"))
 
     }
 
@@ -204,7 +204,7 @@ class UserDbTest : DBTest {
         )
 
         Assertions.assertEquals(alya.id, base.getByPhoneNumber("1234567")?.id)
-        Assertions.assertEquals(null, base.getByPhoneNumber("7654321"))
+        Assertions.assertNull(base.getByPhoneNumber("7654321"))
 
     }
 
