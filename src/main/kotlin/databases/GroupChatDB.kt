@@ -7,6 +7,7 @@ import model.GroupChat
 import model.GroupChatToUser
 import model.User
 import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import tables.GroupChats
 import tables.GroupChatsToUsers
@@ -35,7 +36,9 @@ class GroupChatDB : GroupChatDao {
     override fun deleteById(elemId: Id) =
         transaction {
             val chat = GroupChat.findById(elemId) ?: return@transaction
-            GroupChatsToUsers.deleteWhere { GroupChatsToUsers.chatId eq chat.id }
+            if (!GroupChatsToUsers.select { GroupChatsToUsers.chatId eq chat.id }.empty()) {
+                GroupChatsToUsers.deleteWhere { GroupChatsToUsers.chatId eq chat.id }
+            }
             chat.delete()
         }
 
