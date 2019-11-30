@@ -11,7 +11,7 @@ class MembersOfGroupChatDB : DBTest {
         base.add(1, 1)
         base.add(1, 2)
         base.add(2, 1)
-        
+
         Assertions.assertTrue(base.contains(1, 1))
         Assertions.assertTrue(base.contains(1, 2))
         Assertions.assertTrue(base.contains(2, 1))
@@ -37,7 +37,7 @@ class MembersOfGroupChatDB : DBTest {
         base.add(1, 1)
         base.add(1, 2)
         base.add(2, 1)
-        Assertions.assertTrue(base.select(1).size == 2)
-        Assertions.assertTrue(base.select(2).size == 1)
+        Assertions.assertEquals(2, base.select(1).size)
+        Assertions.assertEquals(1, base.select(2).size)
     }
 }
