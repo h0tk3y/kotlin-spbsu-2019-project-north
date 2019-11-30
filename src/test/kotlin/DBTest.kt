@@ -32,6 +32,8 @@ interface DBTest : KoinTest {
 
 object ConnectDB {
     init {
-        Database.connect("jdbc:h2:mem:regular", "org.h2.Driver")
+          Database.connect("jdbc:sqlite:/data/data.db", "org.sqlite.JDBC")
+//        Database.connect("jdbc:h2:mem:regular", "org.h2.Driver")
+//        Database.connect("jdbc:sqlite:file:test?mode=memory&cache=shared", "org.sqlite.JDBC")
     }
 }
