@@ -14,18 +14,24 @@ import tables.getEntityID
 class MembersOfGroupChatDB : MembersOfGroupChatDao {
     override fun add(key: GroupChatId, value: UserId): Boolean =
         transaction {
-            val user = getEntityID<User>(value) ?: return@transaction null
-            val chat = getEntityID<GroupChat>(key) ?: return@transaction null
+            val user = getEntityID<User>(value) ?: return@transaction false
+            val chat = getEntityID<GroupChat>(key) ?: return@transaction false
             GroupChatToUser.new {
                 this.chatId = chat
                 this.userId = user
             }
-        } == null
+            true
+        }
 
     override fun remove(key: GroupChatId, value: UserId) =
         transaction {
             val keyId = getEntityID<GroupChat>(key) ?: return@transaction false
             val valueId = getEntityID<User>(value) ?: return@transaction false
+
+            if (valueId.value == GroupChat.findById(keyId.value)?.owner?.value) {
+                return@transaction false
+            }
+
             GroupChatToUser
                 .find {
                     (GroupChatsToUsers.chatId eq keyId) and (GroupChatsToUsers.userId eq valueId)
