@@ -27,6 +27,11 @@ class GroupChatOfUserDB : GroupChatsOfUserDao {
         transaction {
             val keyId = getEntityID<User>(key) ?: return@transaction false
             val valueId = getEntityID<GroupChat>(value) ?: return@transaction false
+
+            if (keyId.value == GroupChat.findById(valueId.value)?.owner?.value) {
+                return@transaction false
+            }
+
             GroupChatToUser
                 .find { (GroupChatsToUsers.chatId eq valueId) and (GroupChatsToUsers.userId eq keyId) }
                 .singleOrNull()?.delete() != null
