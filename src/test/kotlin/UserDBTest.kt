@@ -1,4 +1,5 @@
 import dao.UserDao
+import io.ktor.auth.UserPasswordCredential
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
@@ -19,7 +20,7 @@ class UserDbTest : DBTest {
 
 
 //        Assertions.assertEquals(user1, base.getUserByCredentials(UserPasswordCredential(user1.login, user1.password)))
-//        Assertions.assertEquals(null, base.getUserByCredentials(UserPasswordCredential("kek", "lol")))
+        Assertions.assertEquals(null, base.getUserByCredentials(UserPasswordCredential("kek", "lol")))
     }
 
 //    @Test

@@ -7,7 +7,6 @@ import model.GroupChat
 import model.GroupChatToUser
 import model.User
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.emptySized
 import org.jetbrains.exposed.sql.transactions.transaction
 import tables.GroupChatsToUsers
 import tables.getEntityID
@@ -15,13 +14,14 @@ import tables.getEntityID
 class GroupChatOfUserDB : GroupChatsOfUserDao {
     override fun add(key: UserId, value: GroupChatId): Boolean =
         transaction {
-            val user = getEntityID<User>(key) ?: return@transaction null
-            val chat = getEntityID<GroupChat>(value) ?: return@transaction null
+            val user = getEntityID<User>(key) ?: return@transaction false
+            val chat = getEntityID<GroupChat>(value) ?: return@transaction false
             GroupChatToUser.new {
                 this.chatId = chat
                 this.userId = user
             }
-        } == null
+            true
+        }
 
     override fun remove(key: UserId, value: GroupChatId) =
         transaction {
@@ -34,15 +34,15 @@ class GroupChatOfUserDB : GroupChatsOfUserDao {
 
     override fun select(key: UserId): List<GroupChatId> =
         transaction {
-            val keyId = getEntityID<User>(key) ?: return@transaction emptySized<GroupChatToUser>()
-            GroupChatToUser.find { GroupChatsToUsers.userId eq keyId }
-        }.map { it.chatId.value }
+            val keyId = getEntityID<User>(key) ?: return@transaction emptyList<GroupChatId>()
+            GroupChatToUser.find { GroupChatsToUsers.userId eq keyId }.map { it.chatId.value }
+        }
 
     override fun contains(key: UserId, value: GroupChatId): Boolean =
-        !transaction {
+        transaction {
             val keyId = getEntityID<User>(key) ?: return@transaction false
             val valueId = getEntityID<GroupChat>(value) ?: return@transaction false
-            GroupChatToUser
+            !GroupChatToUser
                 .find { (GroupChatsToUsers.userId eq keyId) and (GroupChatsToUsers.chatId eq valueId) }
                 .empty()
         }

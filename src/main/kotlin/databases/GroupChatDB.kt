@@ -30,8 +30,8 @@ class GroupChatDB : GroupChatDao {
         get() = transaction { GroupChat.all().count() }
 
     override fun searchByName(name: String) =
-        transaction { GroupChat.find { GroupChats.chatName eq name } }.toList()
+        transaction { GroupChat.find { GroupChats.chatName eq name }.toList() }
 
     override fun getChatByInviteLink(link: String) =
-        transaction { GroupChat.find { GroupChats.uniqueLink eq link } }.singleOrNull()
+        transaction { GroupChat.find { GroupChats.uniqueLink eq link }.singleOrNull() }
 }

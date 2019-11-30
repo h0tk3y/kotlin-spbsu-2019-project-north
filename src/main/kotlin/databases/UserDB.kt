@@ -25,8 +25,8 @@ class UserDB : UserDao {
         transaction {
             User.find {
                 (Users.login eq credential.name) and (Users.password eq credential.password)
-            }
-        }.singleOrNull()
+            }.singleOrNull()
+        }
 
 
     override fun getById(elemId: UserId): User? =
