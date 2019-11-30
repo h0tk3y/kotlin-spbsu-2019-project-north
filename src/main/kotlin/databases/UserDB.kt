@@ -55,7 +55,15 @@ class UserDB : UserDao {
         transaction { User.findById(userId)?.name = newName }
 
     override fun updateEmail(userId: UserId, newEmail: String) =
-        transaction { User.findById(userId)?.email == newEmail }
+        transaction {
+            val user = User.findById(userId)
+            if (user != null && getByEmail(newEmail) == null) {
+                user.email = newEmail
+                true
+            } else {
+                false
+            }
+        }
 
     override fun existsLogin(login: String): Boolean = !transaction { User.find { Users.login eq login }.empty() }
 }
