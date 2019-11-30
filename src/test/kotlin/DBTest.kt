@@ -31,6 +31,7 @@ interface DBTest : KoinTest {
             SchemaUtils.drop(Messages)
             SchemaUtils.drop(PersonalChats)
             SchemaUtils.drop(Users)
+            SchemaUtils.drop(BlockedUsers)
         }
         transaction {
             SchemaUtils.create(Users)
@@ -39,6 +40,7 @@ interface DBTest : KoinTest {
             SchemaUtils.create(Messages)
             SchemaUtils.create(GroupChatsToUsers)
             SchemaUtils.create(Contacts)
+            SchemaUtils.create(BlockedUsers)
         }
     }
 
