@@ -2,7 +2,6 @@ import dao.UserDao
 import io.ktor.auth.UserPasswordCredential
 import model.User
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
 
@@ -262,11 +261,21 @@ class UserDbTest : DBTest {
             "8"
         )
 
+        val antoha = base.addNewUser(
+            "Antoha",
+            "Antoha@gmail.com",
+            "4444444",
+            "Kartoha",
+            "4444"
+        )
+
+        base.updateEmail(antoha.id.value, "Alya@gmail.com")
         base.updateEmail(alya.id.value, "kek@gmail.com")
         base.updateEmail(vanya.id.value, "Alya@gmail.com")
 
         Assertions.assertEquals("kek@gmail.com", base.getById(alya.id.value)?.email)
         Assertions.assertEquals("Alya@gmail.com", base.getById(vanya.id.value)?.email)
+        Assertions.assertEquals("Antoha@gmail.com", base.getById(antoha.id.value)?.email)
 
     }
 
