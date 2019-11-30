@@ -3,7 +3,9 @@ package databases
 import dao.Id
 import dao.MessageDao
 import dao.UserId
+import model.GroupChat
 import model.Message
+import model.PersonalChat
 import model.User
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
@@ -15,10 +17,17 @@ class MessageDB : MessageDao {
     override fun addNewMessage(from: UserId, isPersonal: Boolean, chat: Id, text: String) =
         transaction {
             val fromId = User.findById(from)?.id ?: return@transaction null
+            val chatId: Id
+
+            if (isPersonal)
+                chatId = PersonalChat.findById(chat)?.id?.value ?: return@transaction  null
+            else
+                chatId = GroupChat.findById(chat)?.id?.value ?: return@transaction  null
+
             Message.new {
                 this.from = fromId
                 this.isPersonal = isPersonal
-                this.chat = chat
+                this.chat = chatId
                 this.text = text
                 this.dateTime = DateTime.now()
                 this.isDeleted = false
