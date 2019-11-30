@@ -2,10 +2,13 @@ package databases
 
 import dao.Id
 import dao.PersonalChatDao
+import dao.PersonalChatId
 import dao.UserId
 import model.PersonalChat
 import model.User
+import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.transactions.transaction
+import tables.PersonalChats
 
 class PersonalChatDB : PersonalChatDao {
     override fun addNewPersonalChat(member1: UserId, member2: UserId) =
@@ -26,4 +29,11 @@ class PersonalChatDB : PersonalChatDao {
 
     override val size: Int
         get() = transaction { PersonalChat.all().count() }
+
+    override fun selectWithUser(user: UserId): List<PersonalChatId> =
+        transaction {
+            PersonalChat
+                .find { (PersonalChats.member1 eq user) or (PersonalChats.member2 eq user) }
+                .map { it.id.value }
+        }
 }

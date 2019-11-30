@@ -43,11 +43,11 @@ class MessageDB : MessageDao {
     override fun findByUser(user: UserId) =
         transaction { Message.find { Messages.from eq user }.toList() }
 
-    override fun findSliceFromChat(type: Boolean, chat: Id, block: Int, last: Int?) =
+    override fun findSliceFromChat(isPersonal: Boolean, chat: Id, block: Int, last: Int?) =
         transaction {
             val chatMessages =
                 Message
-                    .find { (Messages.isPersonal eq type) and (Messages.chat eq chat) }
+                    .find { (Messages.isPersonal eq isPersonal) and (Messages.chat eq chat) }
                     .orderBy(Messages.dateTime to SortOrder.ASC)
             val offset = last ?: (maxOf(chatMessages.count() - block, 0))
             chatMessages.limit(block, offset).toList().reversed()
