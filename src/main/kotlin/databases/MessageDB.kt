@@ -12,12 +12,12 @@ import org.joda.time.DateTime
 import tables.Messages
 
 class MessageDB : MessageDao {
-    override fun addNewMessage(from: UserId, typeOfChat: Boolean, chat: Id, text: String) =
+    override fun addNewMessage(from: UserId, isPersonal: Boolean, chat: Id, text: String) =
         transaction {
             val fromId = User.findById(from)?.id ?: return@transaction null
             Message.new {
                 this.from = fromId
-                this.typeOfChat = typeOfChat
+                this.isPersonal = isPersonal
                 this.chat = chat
                 this.text = text
                 this.dateTime = DateTime.now()
@@ -38,7 +38,7 @@ class MessageDB : MessageDao {
         transaction {
             val chatMessages =
                 Message
-                    .find { (Messages.typeOfChat eq type) and (Messages.chat eq chat) }
+                    .find { (Messages.isPersonal eq type) and (Messages.chat eq chat) }
                     .orderBy(Messages.dateTime to SortOrder.ASC)
             val offset = last ?: (maxOf(chatMessages.count() - block, 0))
             chatMessages.limit(block, offset).toList().reversed()
