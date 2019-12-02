@@ -1,49 +1,59 @@
 package databases
 
-import dao.*
+import dao.Id
+import dao.MessageDao
+import dao.UserId
+import model.GroupChat
 import model.Message
+import model.PersonalChat
+import model.User
+import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.transactions.transaction
+import org.joda.time.DateTime
+import tables.Messages
 
 class MessageDB : MessageDao {
-    private val base: MutableMap<MessageId, Message> = hashMapOf()
+    override fun addNewMessage(from: UserId, isPersonal: Boolean, chat: Id, text: String) =
+        transaction {
+            val fromId = User.findById(from)?.id ?: return@transaction null
+            val chatId: Id
 
-    override fun addWithNewId(elem: Message): Id {
-        val id = base.size.toLong()
-        base[id] = elem
-        return id
-    }
+            if (isPersonal)
+                chatId = PersonalChat.findById(chat)?.id?.value ?: return@transaction  null
+            else
+                chatId = GroupChat.findById(chat)?.id?.value ?: return@transaction  null
 
-    override fun modifyById(elemId: Id, newElem: Message) {
-        base[elemId] = newElem
-    }
-
-    override fun getById(elemId: Id): Message? {
-        return base[elemId]
-    }
-
-    override fun deleteById(elemId: Id) {
-        base.remove(elemId)
-    }
-
-    override fun findByUser(user: UserId): List<MessageId> = base.entries.mapNotNull {
-        if (it.value.from == user) {
-            it.key
-        } else {
-            null
-        }
-    }
-
-    override fun findSliceFromChat(chat: ChatId, block: Int, last: Int?): List<MessageId> {
-        val messages = base.entries.mapNotNull {
-            if (it.value.chat == chat) {
-                it.key
-            } else {
-                null
+            Message.new {
+                this.from = fromId
+                this.isPersonal = isPersonal
+                this.chat = chatId
+                this.text = text
+                this.dateTime = DateTime.now()
+                this.isDeleted = false
+                this.isEdited = false
             }
         }
-        val pos = last ?: messages.size
-        return messages.subList(pos - block, pos)
-    }
+
+    override fun getById(elemId: Id) = transaction { Message.findById(elemId) }
+
+    override fun deleteById(elemId: Id) =
+        transaction { Message.findById(elemId)?.delete() ?: Unit }
+
+    override fun findByUser(user: UserId) =
+        transaction { Message.find { Messages.from eq user }.toList() }
+
+    override fun findSliceFromChat(isPersonal: Boolean, chat: Id, block: Int, last: Int?) =
+        transaction {
+            val chatMessages =
+                Message
+                    .find { (Messages.isPersonal eq isPersonal) and (Messages.chat eq chat) }
+                    .orderBy(Messages.dateTime to SortOrder.ASC)
+            val offset = last ?: (maxOf(chatMessages.count() - block, 0))
+            chatMessages.limit(block, offset).toList().reversed()
+        }
+
 
     override val size
-        get() = base.size
+        get() = transaction { Message.all().count() }
 }

@@ -1,7 +1,5 @@
 package dao
 
-import model.Contact
-
-interface ContactsOfUserDao : RelationsDao<UserId, Contact> {
-    fun changeName(userId: UserId, contactId: Id, name: String)
+interface ContactsOfUserDao : RelationsDao<UserId, Pair<UserId, String>> {
+    fun changeName(userId: UserId, contactId: UserId, name: String)
 }

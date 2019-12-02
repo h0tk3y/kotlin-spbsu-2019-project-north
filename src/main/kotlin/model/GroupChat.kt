@@ -1,12 +1,15 @@
 package model
 
-import dao.MessageDao
-import dao.UserId
+import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.dao.LongEntity
+import org.jetbrains.exposed.dao.LongEntityClass
+import tables.GroupChats
 
-data class GroupChat(
-    val messageDB: MessageDao,
-    val owner: UserId,
-    val chatName: String,
-    val uniqueLink: String? = null
-) : Chat
+class GroupChat(id: EntityID<Long>) : LongEntity(id), Chat {
+    companion object : LongEntityClass<GroupChat>(GroupChats)
+
+    var owner by GroupChats.owner
+    var chatName by GroupChats.chatName
+    var uniqueLink by GroupChats.uniqueLink
+}
 

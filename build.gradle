@@ -55,9 +55,18 @@ dependencies {
     compile "io.ktor:ktor-auth:$ktor_version"
     compile "io.ktor:ktor-auth-jwt:$ktor_version"
     compile "io.ktor:ktor-jackson:$ktor_version"
-    compile 'org.slf4j:slf4j-nop:1.7.25'
+//    compile 'org.slf4j:slf4j-nop:1.7.25'
     testCompile "io.ktor:ktor-server-tests:$ktor_version"
     testCompile "io.ktor:ktor-server-test-host:$ktor_version"
+
+    // Exposed
+    compile 'org.jetbrains.exposed:exposed-core:0.18.1'
+    compile 'org.jetbrains.exposed:exposed-dao:0.18.1'
+    compile 'org.jetbrains.exposed:exposed-jdbc:0.18.1'
+    compile 'org.jetbrains.exposed:exposed-jodatime:0.18.1'
+
+    // Database
+    compile("org.postgresql:postgresql:42.2.2")
 }
 
 test {

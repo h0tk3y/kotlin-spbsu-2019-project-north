@@ -1,4 +1,7 @@
+import dao.GroupChatDao
 import dao.MessageDao
+import dao.PersonalChatDao
+import dao.UserDao
 import model.Message
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -6,165 +9,163 @@ import org.koin.test.inject
 
 class MessageDBTest : DBTest {
     @Test
-    fun addWithNewIdAndGetByIdTest() {
+    fun getByIdTest() {
         val base: MessageDao by inject()
-        val msg = Message(
-            0, 0, 0,
-            "My name is Sasha",
-            0, false, false
-        )
-        val id = base.addWithNewId(msg)
-        Assertions.assertEquals(msg, base.getById(id))
-        Assertions.assertEquals(null, base.getById(id + 1))
+        val pchats: PersonalChatDao by inject()
+        val gchats: GroupChatDao by inject()
+        val users: UserDao by inject()
+
+        val alya = users.addNewUser(
+            "Alya",
+            "Alya@gmail.com",
+            "1234567",
+            "Pingwin",
+            "123"
+        ).id.value
+
+        val vanya = users.addNewUser(
+            "Vanya",
+            "Vanya@gmail.com",
+            "8888888",
+            "olivva",
+            "8"
+        ).id.value
+
+        val chat1 = pchats.addNewPersonalChat(alya, vanya)
+        val chat2 = gchats.addNewGroupChat(alya, "Alin chat", "1")
+
+        var msg1 : Message? = null
+        if (chat1?.id?.value != null)
+            msg1 = base.addNewMessage(alya, true, chat1.id.value, "Priv")
+        var msg2 : Message? = null
+        if (chat2?.id?.value != null)
+            msg2 = base.addNewMessage(alya, false, chat2.id.value, "Vsem privet!")
+
+        Assertions.assertNotNull(msg1?.id?.value)
+        if (msg1?.id?.value != null && chat1?.id?.value != null) {
+            Assertions.assertEquals(msg1.id.value, base.getById(msg1.id.value)?.id?.value)
+            Assertions.assertEquals(chat1.id.value, msg1.chat)
+            Assertions.assertTrue(msg1.isPersonal)
+        }
+
+        Assertions.assertNotNull(msg2?.id?.value)
+        if (msg2?.id?.value != null && chat2?.id?.value != null) {
+            Assertions.assertEquals(msg2.id.value, base.getById(msg2.id.value)?.id?.value)
+            Assertions.assertEquals(chat2.id.value, msg2.chat)
+            Assertions.assertFalse(msg2.isPersonal)
+        }
     }
 
     @Test
     fun deleteByIdTest() {
         val base: MessageDao by inject()
-        val msg = Message(
-            0, 0, 0,
-            "My name is Sasha",
-            0, false, false
-        )
-        val id = base.addWithNewId(msg)
-        Assertions.assertEquals(msg, base.getById(id))
-        base.deleteById(id + 1)
-        Assertions.assertEquals(msg, base.getById(id))
-        base.deleteById(id)
-        Assertions.assertEquals(null, base.getById(id))
-    }
+        val pchats: PersonalChatDao by inject()
+        val gchats: GroupChatDao by inject()
+        val users: UserDao by inject()
 
-    /*@Test // Fails now
-    fun deleteByIdTest2() {
-        val base: MessageDao by inject()
-        val msg = Message(
-            0, 0, 0,
-            "My name is Sasha",
-            0, false, false
-        )
-        val id = base.addWithNewId(msg)
-        val msg2 = Message(
-            1, 1, 1,
-            "My name is Dasha",
-            1, false, false
-        )
-        val id2 = base.addWithNewId(msg2)
-        base.deleteById(id)
-        val msg3 = Message(
-            2, 2, 2,
-            "My name is Pasha",
-            2, false, false
-        )
-        val id3 = base.addWithNewId(msg3)
-        Assertions.assertEquals(msg2, base.getById(id2))
-        Assertions.assertEquals(msg3, base.getById(id3))
-    }*/
+        val alya = users.addNewUser(
+            "Alya",
+            "Alya@gmail.com",
+            "1234567",
+            "Pingwin",
+            "123"
+        ).id.value
 
-    @Test
-    fun findByUserTest() {
-        val base: MessageDao by inject()
+        val vanya = users.addNewUser(
+            "Vanya",
+            "Vanya@gmail.com",
+            "8888888",
+            "olivva",
+            "8"
+        ).id.value
 
-        val msg1 = Message(
-            0, 1, 2,
-            "My name is Sasha",
-            3, false, false
-        )
-        val id1 = base.addWithNewId(msg1)
+        val chat1 = pchats.addNewPersonalChat(alya, vanya)
+        val chat2 = gchats.addNewGroupChat(alya, "Alin chat", "1")
 
-        val msg2 = Message(
-            4, 5, 6,
-            "My name is Dasha",
-            7, false, false
-        )
-        val id2 = base.addWithNewId(msg2)
+        var msg1 : Message? = null
+        if (chat1?.id?.value != null)
+            msg1 = base.addNewMessage(alya, true, chat1.id.value, "Priv")
+        var msg2 : Message? = null
+        if (chat2?.id?.value != null)
+            msg2 = base.addNewMessage(alya, false, chat2.id.value, "Vsem privet!")
 
-        val msg3 = Message(
-            8, 5, 9,
-            "My name is Petr",
-            10, false, false
-        )
-        val id3 = base.addWithNewId(msg3)
+        Assertions.assertNotNull(msg1?.id?.value)
+        if (msg1?.id?.value != null && chat1?.id?.value != null) {
+            Assertions.assertEquals(msg1.id.value, base.getById(msg1.id.value)?.id?.value)
 
-        val msg4 = Message(
-            11, 12, 13,
-            "My name is Sasha",
-            14, false, false
-        )
-        val id4 = base.addWithNewId(msg4)
+            base.deleteById(msg1.id.value)
 
-        Assertions.assertEquals(listOf(id1), base.findByUser(1))
-        Assertions.assertEquals(listOf(id2, id3), base.findByUser(5))
-        Assertions.assertEquals(listOf(id4), base.findByUser(12))
-        Assertions.assertEquals(listOf<Long>(), base.findByUser(0))
+            Assertions.assertNull(base.getById(msg1.id.value))
+        }
+
+        Assertions.assertNotNull(msg2?.id?.value)
+        if (msg2?.id?.value != null && chat2?.id?.value != null) {
+            Assertions.assertEquals(msg2.id.value, base.getById(msg2.id.value)?.id?.value)
+
+            base.deleteById(msg2.id.value)
+
+            Assertions.assertNull(base.getById(msg2.id.value))
+        }
     }
 
     @Test
-    fun findSliceFromChatTest() {
+    fun findByUserAndfindSliceFromChatAndSizeTest() {
         val base: MessageDao by inject()
+        val pchats: PersonalChatDao by inject()
+        val gchats: GroupChatDao by inject()
+        val users: UserDao by inject()
 
-        val msg1 = Message(
-            0, 1, 2,
-            "My name is Sasha",
-            3, false, false
-        )
-        val id1 = base.addWithNewId(msg1)
+        val alya = users.addNewUser(
+            "Alya",
+            "Alya@gmail.com",
+            "1234567",
+            "Pingwin",
+            "123"
+        ).id.value
 
-        val msg2 = Message(
-            4, 5, 2,
-            "My name is Dasha",
-            7, false, false
-        )
-        val id2 = base.addWithNewId(msg2)
+        val vanya = users.addNewUser(
+            "Vanya",
+            "Vanya@gmail.com",
+            "8888888",
+            "olivva",
+            "8"
+        ).id.value
 
-        val msg3 = Message(
-            4, 8, 2,
-            "My name is Petr",
-            10, false, false
-        )
-        val id3 = base.addWithNewId(msg3)
+        val chat1 = pchats.addNewPersonalChat(alya, vanya)
+        val chat2 = gchats.addNewGroupChat(alya, "Alin chat", "1")
 
-        val msg4 = Message(
-            11, 12, 3,
-            "My name is Sasha",
-            14, false, false
-        )
-        val id4 = base.addWithNewId(msg4)
+        var msg1 : Message? = null
+        if (chat1?.id?.value != null)
+            msg1 = base.addNewMessage(alya, true, chat1.id.value, "Priv")
 
-        Assertions.assertEquals(listOf(id2, id3), base.findSliceFromChat(2, 2))
-        Assertions.assertEquals(listOf(id1, id2), base.findSliceFromChat(2, 2, 2))
-        Assertions.assertEquals(listOf(id1, id2, id3), base.findSliceFromChat(2, 3))
-        Assertions.assertEquals(listOf<Long>(), base.findSliceFromChat(2, 0))
-        Assertions.assertEquals(listOf(id4), base.findSliceFromChat(3, 1))
-        Assertions.assertEquals(listOf<Long>(), base.findSliceFromChat(4, 0))
+        Assertions.assertEquals(1, base.size)
+
+        var msg2 : Message? = null
+        var msg3 : Message? = null
+        var msg4 : Message? = null
+        if (chat2?.id?.value != null) {
+            msg2 = base.addNewMessage(alya, false, chat2.id.value, "Vsem privet!")
+
+            Assertions.assertEquals(2, base.size)
+
+            msg3 = base.addNewMessage(alya, false, chat2.id.value, "Alya is cool!")
+            msg4 = base.addNewMessage(alya, false, chat2.id.value, "Kotlin top!")
+        }
+
+        Assertions.assertEquals(4, base.size)
+
+        Assertions.assertEquals(4, base.findByUser(alya).size)
+        Assertions.assertEquals(0, base.findByUser(vanya).size)
+
+//        if (chat1?.id?.value != null) {
+//            Assertions.assertEquals(0, base.findSliceFromChat(true, chat1.id.value, 0, 1).size)
+//            Assertions.assertEquals(1, base.findSliceFromChat(true, chat1.id.value, 1, 1).size)
+//        }
+//
+//        if (chat2?.id?.value != null) {
+//            Assertions.assertEquals(3, base.findSliceFromChat(false, chat2.id.value, 3, 0).size)
+//            Assertions.assertEquals(2, base.findSliceFromChat(false, chat2.id.value, 2, 1).size)
+//        }
     }
 
-    @Test
-    fun sizeTest() {
-        val base: MessageDao by inject()
-        Assertions.assertEquals(0, base.size)
-
-        val msg1 = Message(
-            0, 1, 2,
-            "My name is Sasha",
-            3, false, false
-        )
-        val id1 = base.addWithNewId(msg1)
-        Assertions.assertEquals(1, base.size)
-
-        val msg2 = Message(
-            4, 5, 2,
-            "My name is Dasha",
-            7, false, false
-        )
-        val id2 = base.addWithNewId(msg2)
-        Assertions.assertEquals(2, base.size)
-
-        Assertions.assertEquals(2, base.size)
-        base.deleteById(id1)
-        Assertions.assertEquals(1, base.size)
-        base.deleteById(id1)
-        Assertions.assertEquals(1, base.size)
-        base.deleteById(id2)
-        Assertions.assertEquals(0, base.size)
-    }
 }

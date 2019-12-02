@@ -1,15 +1,14 @@
 import dao.GroupChatDao
 import dao.GroupChatsOfUserDao
-import dao.MembersOfGroupChatDao
 import dao.UserDao
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
 
-class MembersOfGroupChatDBTest : DBTest {
+class GroupChatOfUserDBTest : DBTest {
     @Test
     fun addTest() {
-        val base: MembersOfGroupChatDao by inject()
+        val base: GroupChatsOfUserDao by inject()
         val chats: GroupChatDao by inject()
         val users: UserDao by inject()
 
@@ -45,20 +44,20 @@ class MembersOfGroupChatDBTest : DBTest {
         Assertions.assertNotNull(chat2)
 
         if (chat1 != null) {
-            Assertions.assertTrue(base.add(chat1, vanya))
-            Assertions.assertTrue(base.add(chat1, antoha))
+            Assertions.assertTrue(base.add(vanya, chat1))
+            Assertions.assertTrue(base.add(antoha, chat1))
         }
 
         if (chat2 != null)
-            Assertions.assertTrue(base.add(chat2, alya))
+            Assertions.assertTrue(base.add(alya, chat2))
 
-        Assertions.assertFalse(base.add(239, alya))
+        Assertions.assertFalse(base.add(alya, 239))
 
     }
 
     @Test
     fun removeTest() {
-        val base: MembersOfGroupChatDao by inject()
+        val base: GroupChatsOfUserDao by inject()
         val chats: GroupChatDao by inject()
         val users: UserDao by inject()
 
@@ -92,21 +91,21 @@ class MembersOfGroupChatDBTest : DBTest {
         Assertions.assertNotNull(chat1)
 
         if (chat1 != null) {
-            Assertions.assertTrue(base.add(chat1, vanya))
-            Assertions.assertTrue(base.add(chat1, antoha))
+            Assertions.assertTrue(base.add(vanya, chat1))
+            Assertions.assertTrue(base.add(antoha, chat1))
 
-            Assertions.assertTrue(base.remove(chat1, vanya))
-            Assertions.assertFalse(base.remove(chat1, vanya))
+            Assertions.assertTrue(base.remove(vanya, chat1))
+            Assertions.assertFalse(base.remove(vanya, chat1))
 
-            Assertions.assertFalse(base.remove(chat1, alya))
+            Assertions.assertFalse(base.remove(alya, chat1))
         }
 
-        Assertions.assertFalse(base.remove(239, alya))
+        Assertions.assertFalse(base.remove(alya, 239))
     }
 
     @Test
     fun selectTest() {
-        val base: MembersOfGroupChatDao by inject()
+        val base: GroupChatsOfUserDao by inject()
         val chats: GroupChatDao by inject()
         val users: UserDao by inject()
 
@@ -142,26 +141,26 @@ class MembersOfGroupChatDBTest : DBTest {
         Assertions.assertNotNull(chat2)
 
         if (chat1 != null)
-            Assertions.assertTrue(base.add(chat1, vanya))
+            Assertions.assertTrue(base.add(vanya, chat1))
         if (chat1 != null)
-            Assertions.assertTrue(base.add(chat1, antoha))
+            Assertions.assertTrue(base.add(antoha, chat1))
         if (chat2 != null)
-            Assertions.assertTrue(base.add(chat2, alya))
+            Assertions.assertTrue(base.add(alya, chat2))
 
-        if (chat1 != null && chat2 != null) {
-            Assertions.assertEquals(3, base.select(chat1).size)
-            Assertions.assertEquals(2, base.select(chat2).size)
+        Assertions.assertEquals(2, base.select(alya).size)
+        Assertions.assertEquals(2, base.select(vanya).size)
+        Assertions.assertEquals(1, base.select(antoha).size)
 
-            Assertions.assertTrue(base.remove(chat1, antoha))
+        if (chat1 != null)
+            Assertions.assertTrue(base.remove(antoha, chat1))
 
-            Assertions.assertEquals(2, base.select(chat1).size)
-        }
+        Assertions.assertEquals(0, base.select(antoha).size)
 
     }
 
     @Test
     fun containsTest() {
-        val base: MembersOfGroupChatDao by inject()
+        val base: GroupChatsOfUserDao by inject()
         val chats: GroupChatDao by inject()
         val users: UserDao by inject()
 
@@ -197,25 +196,25 @@ class MembersOfGroupChatDBTest : DBTest {
         Assertions.assertNotNull(chat2)
 
         if (chat1 != null) {
-            Assertions.assertTrue(base.add(chat1, vanya))
-            Assertions.assertTrue(base.add(chat1, antoha))
+            Assertions.assertTrue(base.add(vanya, chat1))
+            Assertions.assertTrue(base.add(antoha, chat1))
 
-            Assertions.assertTrue(base.contains(chat1, alya))
-            Assertions.assertTrue(base.contains(chat1, vanya))
-            Assertions.assertTrue(base.contains(chat1, antoha))
+            Assertions.assertTrue(base.contains(alya, chat1))
+            Assertions.assertTrue(base.contains(vanya, chat1))
+            Assertions.assertTrue(base.contains(antoha, chat1))
 
-            Assertions.assertTrue(base.remove(chat1, vanya))
-            Assertions.assertFalse(base.contains(chat1, vanya))
+            Assertions.assertTrue(base.remove(vanya, chat1))
+            Assertions.assertFalse(base.contains(vanya, chat1))
 
         }
 
         if (chat2 != null) {
-            Assertions.assertTrue(base.add(chat2, alya))
+            Assertions.assertTrue(base.add(alya, chat2))
 
-            Assertions.assertTrue(base.contains(chat2, alya))
-            Assertions.assertTrue(base.contains(chat2, vanya))
+            Assertions.assertTrue(base.contains(alya, chat2))
+            Assertions.assertTrue(base.contains(vanya, chat2))
 
-            Assertions.assertFalse(base.contains(chat2, antoha))
+            Assertions.assertFalse(base.contains(antoha, chat2))
         }
 
     }

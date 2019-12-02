@@ -1,13 +1,14 @@
 package model
 
-import dao.Id
+import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.dao.LongEntity
+import org.jetbrains.exposed.dao.LongEntityClass
+import tables.Contacts
 
-class Contact(
-    val id: Id,
-    val name: String
-) {
-    override fun equals(other: Any?): Boolean =
-        (other as? Contact)?.id == id
+class Contact(id: EntityID<Long>) : LongEntity(id) {
+    companion object : LongEntityClass<Contact>(Contacts)
 
-    override fun hashCode(): Int = id.hashCode()
+    var userId by Contacts.userId
+    var contactId by Contacts.contactId
+    var name by Contacts.name
 }

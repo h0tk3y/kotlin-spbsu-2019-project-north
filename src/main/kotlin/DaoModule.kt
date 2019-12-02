@@ -5,8 +5,9 @@ import org.koin.dsl.module
 val daoModule = module {
     single<MessageDao> { MessageDB() }
     single<UserDao> { UserDB() }
-    single<ChatDao> { ChatDB() }
-    single<ChatsOfUserDao> { ChatsOfUserDB() }
+    single<PersonalChatDao> { PersonalChatDB() }
+    single<GroupChatDao> { GroupChatDB() }
+    single<GroupChatsOfUserDao> { GroupChatOfUserDB() }
     single<BlockedUsersDao> { BlockedUsersDB() }
     single<MembersOfGroupChatDao> { MembersOfGroupChatDB() }
     single<ContactsOfUserDao> { ContactsOfUserDB() }

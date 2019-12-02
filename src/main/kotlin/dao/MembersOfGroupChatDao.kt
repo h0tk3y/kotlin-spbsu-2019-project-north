@@ -1,3 +1,3 @@
 package dao
 
-interface MembersOfGroupChatDao : RelationsDao<ChatId, UserId>
+interface MembersOfGroupChatDao : RelationsDao<Id, UserId>
