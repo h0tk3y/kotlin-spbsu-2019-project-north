@@ -18,7 +18,7 @@ class GroupChatOfUserDBTest : DBTest {
             "1234567",
             "Pingwin",
             "123"
-        )
+        ).id.value
 
         val vanya = users.addNewUser(
             "Vanya",
@@ -26,7 +26,7 @@ class GroupChatOfUserDBTest : DBTest {
             "8888888",
             "olivva",
             "8"
-        )
+        ).id.value
 
         val antoha = users.addNewUser(
             "Antoha",
@@ -34,24 +34,24 @@ class GroupChatOfUserDBTest : DBTest {
             "4444444",
             "Kartoha",
             "4444"
-        )
+        ).id.value
 
 
-        val chat1 = chats.addNewGroupChat(alya.id.value, "Alin chat", "knskcsa")
-        val chat2 = chats.addNewGroupChat(vanya.id.value, "Vanin chat", "oqlmcznka")
+        val chat1 = chats.addNewGroupChat(alya, "Alin chat", "knskcsa")?.id?.value
+        val chat2 = chats.addNewGroupChat(vanya, "Vanin chat", "oqlmcznka")?.id?.value
 
-        Assertions.assertNotNull(chat1?.id?.value)
-        Assertions.assertNotNull(chat2?.id?.value)
+        Assertions.assertNotNull(chat1)
+        Assertions.assertNotNull(chat2)
 
-        if (chat1?.id?.value != null) {
-            Assertions.assertTrue(base.add(vanya.id.value, chat1.id.value))
-            Assertions.assertTrue(base.add(antoha.id.value, chat1.id.value))
+        if (chat1 != null) {
+            Assertions.assertTrue(base.add(vanya, chat1))
+            Assertions.assertTrue(base.add(antoha, chat1))
         }
 
-        if (chat2?.id?.value != null)
-            Assertions.assertTrue(base.add(alya.id.value, chat2.id.value))
+        if (chat2 != null)
+            Assertions.assertTrue(base.add(alya, chat2))
 
-        Assertions.assertFalse(base.add(alya.id.value, 239))
+        Assertions.assertFalse(base.add(alya, 239))
 
     }
 
@@ -67,7 +67,7 @@ class GroupChatOfUserDBTest : DBTest {
             "1234567",
             "Pingwin",
             "123"
-        )
+        ).id.value
 
         val vanya = users.addNewUser(
             "Vanya",
@@ -75,7 +75,7 @@ class GroupChatOfUserDBTest : DBTest {
             "8888888",
             "olivva",
             "8"
-        )
+        ).id.value
 
         val antoha = users.addNewUser(
             "Antoha",
@@ -83,24 +83,24 @@ class GroupChatOfUserDBTest : DBTest {
             "4444444",
             "Kartoha",
             "4444"
-        )
+        ).id.value
 
 
-        val chat1 = chats.addNewGroupChat(alya.id.value, "Alin chat", "knskcsa")
+        val chat1 = chats.addNewGroupChat(alya, "Alin chat", "knskcsa")?.id?.value
 
-        Assertions.assertNotNull(chat1?.id?.value)
+        Assertions.assertNotNull(chat1)
 
-        if (chat1?.id?.value != null) {
-            Assertions.assertTrue(base.add(vanya.id.value, chat1.id.value))
-            Assertions.assertTrue(base.add(antoha.id.value, chat1.id.value))
+        if (chat1 != null) {
+            Assertions.assertTrue(base.add(vanya, chat1))
+            Assertions.assertTrue(base.add(antoha, chat1))
 
-            Assertions.assertTrue(base.remove(vanya.id.value, chat1.id.value))
-            Assertions.assertFalse(base.remove(vanya.id.value, chat1.id.value))
+            Assertions.assertTrue(base.remove(vanya, chat1))
+            Assertions.assertFalse(base.remove(vanya, chat1))
 
-            Assertions.assertFalse(base.remove(alya.id.value, chat1.id.value))
+            Assertions.assertFalse(base.remove(alya, chat1))
         }
 
-        Assertions.assertFalse(base.remove(alya.id.value, 239))
+        Assertions.assertFalse(base.remove(alya, 239))
     }
 
     @Test
@@ -115,7 +115,7 @@ class GroupChatOfUserDBTest : DBTest {
             "1234567",
             "Pingwin",
             "123"
-        )
+        ).id.value
 
         val vanya = users.addNewUser(
             "Vanya",
@@ -123,7 +123,7 @@ class GroupChatOfUserDBTest : DBTest {
             "8888888",
             "olivva",
             "8"
-        )
+        ).id.value
 
         val antoha = users.addNewUser(
             "Antoha",
@@ -131,30 +131,30 @@ class GroupChatOfUserDBTest : DBTest {
             "4444444",
             "Kartoha",
             "4444"
-        )
+        ).id.value
 
 
-        val chat1 = chats.addNewGroupChat(alya.id.value, "Alin chat", "knskcsa")
-        val chat2 = chats.addNewGroupChat(vanya.id.value, "Vanin chat", "oqlmcznka")
+        val chat1 = chats.addNewGroupChat(alya, "Alin chat", "knskcsa")?.id?.value
+        val chat2 = chats.addNewGroupChat(vanya, "Vanin chat", "oqlmcznka")?.id?.value
 
-        Assertions.assertNotNull(chat1?.id?.value)
-        Assertions.assertNotNull(chat2?.id?.value)
+        Assertions.assertNotNull(chat1)
+        Assertions.assertNotNull(chat2)
 
-        if (chat1?.id?.value != null)
-            Assertions.assertTrue(base.add(vanya.id.value, chat1.id.value))
-        if (chat1?.id?.value != null)
-            Assertions.assertTrue(base.add(antoha.id.value, chat1.id.value))
-        if (chat2?.id?.value != null)
-            Assertions.assertTrue(base.add(alya.id.value, chat2.id.value))
+        if (chat1 != null)
+            Assertions.assertTrue(base.add(vanya, chat1))
+        if (chat1 != null)
+            Assertions.assertTrue(base.add(antoha, chat1))
+        if (chat2 != null)
+            Assertions.assertTrue(base.add(alya, chat2))
 
-        Assertions.assertEquals(2, base.select(alya.id.value).size)
-        Assertions.assertEquals(2, base.select(vanya.id.value).size)
-        Assertions.assertEquals(1, base.select(antoha.id.value).size)
+        Assertions.assertEquals(2, base.select(alya).size)
+        Assertions.assertEquals(2, base.select(vanya).size)
+        Assertions.assertEquals(1, base.select(antoha).size)
 
-        if (chat1?.id?.value != null)
-            Assertions.assertTrue(base.remove(antoha.id.value, chat1.id.value))
+        if (chat1 != null)
+            Assertions.assertTrue(base.remove(antoha, chat1))
 
-        Assertions.assertEquals(0, base.select(antoha.id.value).size)
+        Assertions.assertEquals(0, base.select(antoha).size)
 
     }
 
@@ -170,7 +170,7 @@ class GroupChatOfUserDBTest : DBTest {
             "1234567",
             "Pingwin",
             "123"
-        )
+        ).id.value
 
         val vanya = users.addNewUser(
             "Vanya",
@@ -178,7 +178,7 @@ class GroupChatOfUserDBTest : DBTest {
             "8888888",
             "olivva",
             "8"
-        )
+        ).id.value
 
         val antoha = users.addNewUser(
             "Antoha",
@@ -186,35 +186,35 @@ class GroupChatOfUserDBTest : DBTest {
             "4444444",
             "Kartoha",
             "4444"
-        )
+        ).id.value
 
 
-        val chat1 = chats.addNewGroupChat(alya.id.value, "Alin chat", "knskcsa")
-        val chat2 = chats.addNewGroupChat(vanya.id.value, "Vanin chat", "oqlmcznka")
+        val chat1 = chats.addNewGroupChat(alya, "Alin chat", "knskcsa")?.id?.value
+        val chat2 = chats.addNewGroupChat(vanya, "Vanin chat", "oqlmcznka")?.id?.value
 
-        Assertions.assertNotNull(chat1?.id?.value)
-        Assertions.assertNotNull(chat2?.id?.value)
+        Assertions.assertNotNull(chat1)
+        Assertions.assertNotNull(chat2)
 
-        if (chat1?.id?.value != null) {
-            Assertions.assertTrue(base.add(vanya.id.value, chat1.id.value))
-            Assertions.assertTrue(base.add(antoha.id.value, chat1.id.value))
+        if (chat1 != null) {
+            Assertions.assertTrue(base.add(vanya, chat1))
+            Assertions.assertTrue(base.add(antoha, chat1))
 
-            Assertions.assertTrue(base.contains(alya.id.value, chat1.id.value))
-            Assertions.assertTrue(base.contains(vanya.id.value, chat1.id.value))
-            Assertions.assertTrue(base.contains(antoha.id.value, chat1.id.value))
+            Assertions.assertTrue(base.contains(alya, chat1))
+            Assertions.assertTrue(base.contains(vanya, chat1))
+            Assertions.assertTrue(base.contains(antoha, chat1))
 
-            Assertions.assertTrue(base.remove(vanya.id.value, chat1.id.value))
-            Assertions.assertFalse(base.contains(vanya.id.value, chat1.id.value))
+            Assertions.assertTrue(base.remove(vanya, chat1))
+            Assertions.assertFalse(base.contains(vanya, chat1))
 
         }
 
-        if (chat2?.id?.value != null) {
-            Assertions.assertTrue(base.add(alya.id.value, chat2.id.value))
+        if (chat2 != null) {
+            Assertions.assertTrue(base.add(alya, chat2))
 
-            Assertions.assertTrue(base.contains(alya.id.value, chat2.id.value))
-            Assertions.assertTrue(base.contains(vanya.id.value, chat2.id.value))
+            Assertions.assertTrue(base.contains(alya, chat2))
+            Assertions.assertTrue(base.contains(vanya, chat2))
 
-            Assertions.assertFalse(base.contains(antoha.id.value, chat2.id.value))
+            Assertions.assertFalse(base.contains(antoha, chat2))
         }
 
     }
