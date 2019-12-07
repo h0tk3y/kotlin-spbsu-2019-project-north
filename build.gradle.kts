@@ -1,3 +1,6 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile
+
 buildscript {
     repositories {
         jcenter()
@@ -92,4 +95,20 @@ tasks.compileKotlin {
 
 tasks.compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+val createDockerfile by tasks.creating(Dockerfile::class) {
+    dependsOn(tasks.installDist)
+    destFile.set(file("docker/app/Dockerfile"))
+    from("postgres:alpine")
+    copyFile("/build/install/SnailMail", "/opt/SnailMail")
+    runCommand("apk update && apk add openjdk11-jre nginx")
+    exposePort(5432)
+//    entryPoint("/opt/SnailMail/bin/SnailMail")
+}
+
+tasks.create("buildImage", DockerBuildImage::class) {
+    dockerFile.set(file("docker/app/Dockerfile"))
+    inputDir.set(file("."))
+    images.add("snailmail:latest")
 }
