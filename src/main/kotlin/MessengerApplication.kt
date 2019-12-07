@@ -1,90 +1,88 @@
-//import dao.UserDao
-//import dao.UserId
-//import io.ktor.application.Application
-//import io.ktor.application.call
-//import io.ktor.application.install
-//import io.ktor.auth.Authentication
-//import io.ktor.auth.Credential
-//import io.ktor.auth.UserPasswordCredential
-//import io.ktor.auth.authenticate
-//import io.ktor.auth.jwt.jwt
-//import io.ktor.features.ContentNegotiation
-//import io.ktor.http.HttpStatusCode
-//import io.ktor.jackson.jackson
-//import io.ktor.request.receive
-//import io.ktor.request.receiveParameters
-//import io.ktor.response.respond
-//import io.ktor.response.respondText
-//import io.ktor.routing.get
-//import io.ktor.routing.post
-//import io.ktor.routing.routing
-//import org.koin.ktor.ext.Koin
-//import org.koin.ktor.ext.inject
-//import kotlin.reflect.KCallable
-//import kotlin.reflect.KFunction
-//
-//fun main() {
-////    val server =
-//}
-//
-//fun Application.main() {
-//    MessengerApplication().apply { main() }
-//}
-//
-//class MessengerApplication {
-//    fun Application.main() {
-//        install(Koin) {
-//            modules(daoModule)
-//        }
-//
-//        install(ContentNegotiation) {
-//            jackson {}
-//        }
-//
-//        val server = Server()
-//        install(Authentication) {
-//            jwt {
-//                realm = JwtConfig.realm
-//                verifier(JwtConfig.verifier)
-//                validate { it.payload.getClaim("id").asLong()?.let(server.userBase::getById) }
-//            }
-//        }
-//
-//        routing {
-//            post("/login") {
-//                val credentials = call.receive<UserPasswordCredential>()
-//                when(val user = server.getUserByCredentials(credentials)) {
-//                    null -> call.respond(HttpStatusCode.Forbidden, "Invalid login/password pair")
-//                    else -> call.respond(HttpStatusCode.OK, JwtConfig.makeToken(user))
-//                }
-//            }
-//            post("/register") {
-//                val name = call.parameters["name"]
-//                val email = call.parameters["email"]
-//                val phoneNumber = call.parameters["phoneNumber"]
-//                val login = call.parameters["login"]
-//                val password = call.parameters["password"]
-//                val registerUserInfo = server.register(name, email, phoneNumber, login, password)
-//                when (val user = registerUserInfo.user) {
-//                     null -> call.respond(HttpStatusCode.Forbidden, registerUserInfo.message!!)
-//                     else -> call.respond(HttpStatusCode.OK, JwtConfig.makeToken(user))
-//                }
-//            }
-//            authenticate {
-//                val getByIdRequestsMap: Map<String, (Server, UserId) -> List<Any>> = mapOf(
-//                    "/getChats" to Server::getChats,
-//                    "/getPersonalChats" to Server::getPersonalChats,
-//                    "/getGroupChats" to Server::getGroupChats,
-//                    "/getContacts" to Server::getContacts
-//                )
-//                for ((path, function) in getByIdRequestsMap) {
-//                    get(path) {
-//                        when (val id = call.parameters["userId"]?.toLong()) {
-//                            null -> call.respond(HttpStatusCode.Forbidden, "Invalid id")
-//                            else -> call.respond(HttpStatusCode.OK, function(server, id))
-//                        }
-//                    }
-//                }
+import dao.UserId
+import io.ktor.application.Application
+import io.ktor.application.ApplicationCall
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.auth.*
+import io.ktor.auth.jwt.jwt
+import io.ktor.features.ContentNegotiation
+import io.ktor.features.StatusPages
+import io.ktor.http.HttpStatusCode
+import io.ktor.jackson.jackson
+import io.ktor.request.receive
+import io.ktor.response.respond
+import io.ktor.routing.get
+import io.ktor.routing.post
+import io.ktor.routing.routing
+import model.User
+import org.koin.ktor.ext.Koin
+import org.koin.ktor.ext.inject
+
+data class LoginRequest(val username: String, val password: String)
+data class RegisterRequest(val name: String, val email: String, val phoneNumber: String, val username: String, val password: String)
+
+fun main() {
+//    val server =
+}
+
+fun Application.main() {
+    MessengerApplication().apply { main() }
+}
+
+class MessengerApplication {
+    fun Application.main() {
+        install(Koin) {
+            modules(listOf(daoModule, apiModule))
+        }
+
+        install(ContentNegotiation) {
+            jackson {}
+        }
+
+        install(StatusPages) {
+            exception<Throwable> {
+                call.respond(HttpStatusCode.InternalServerError, "Internal server error")
+            }
+        }
+
+        val server: Server by inject()
+        install(Authentication) {
+            jwt {
+                realm = JwtConfig.realm
+                verifier(JwtConfig.verifier)
+                validate { it.payload.getClaim("id").asLong()?.let(server::getUserById) }
+            }
+        }
+
+        routing {
+            post("/login") {
+                val request = call.receive<LoginRequest>()
+                val credentials = UserPasswordCredential(request.username, request.password)
+                when (val user = server.getUserByCredentials(credentials)) {
+                    null -> call.respond(HttpStatusCode.Forbidden, "Invalid login/password pair")
+                    else -> call.respond(HttpStatusCode.OK, JwtConfig.makeToken(user))
+                }
+            }
+            post("/register") {
+                call.respond(
+                    HttpStatusCode.OK,
+                    with (call.receive<RegisterRequest>()) {
+                        JwtConfig.makeToken(server.register(name, email, phoneNumber, username, password))
+                    }
+                )
+            }
+            authenticate {
+                val getByIdRequestsMap: Map<String, (Server, UserId) -> List<Any>> = mapOf(
+                    "/getChats" to Server::getChats,
+                    "/getPersonalChats" to Server::getPersonalChats,
+                    "/getGroupChats" to Server::getGroupChats,
+                    "/getContacts" to Server::getContacts
+                )
+                for ((path, function) in getByIdRequestsMap) {
+                    get(path) {
+                        call.respond(HttpStatusCode.OK, function(server, call.principal<User>()!!.id.value))
+                    }
+                }
 //                get("/getChatMessages") {
 //                    when (val id = call.parameters["id"]?.toLong()) {
 //                        null -> call.respond(HttpStatusCode.Forbidden, "Invalid id")
@@ -125,7 +123,7 @@
 //                    else
 //                        call.respond(HttpStatusCode.OK, server.createPersonalChat(user1, user2))
 //                }
-//            }
-//        }
-//    }
-//}
+            }
+        }
+    }
+}

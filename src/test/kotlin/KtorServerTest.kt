@@ -1,24 +1,51 @@
-import io.ktor.client.HttpClient
-import io.ktor.client.request.post
-import io.ktor.client.request.url
-import org.json.simple.JSONObject
-import org.junit.jupiter.api.Assertions
+import io.ktor.application.Application
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.HttpStatusCodeContent
+import io.ktor.server.testing.*
 import org.junit.jupiter.api.Test
+import org.koin.test.inject
+import kotlin.test.assertEquals
 
-class KtorServerTest {
+class KtorServerTest : DBTest() {
+    fun withAppAndServer(test: TestApplicationEngine.(Server) -> Unit) {
+        withTestApplication(Application::main) {
+            val server: Server by inject()
+            test(server)
+        }
+    }
+
+    fun TestApplicationEngine.withLoginRequest(username: String, password: String, code: TestApplicationCall.() -> Unit) {
+        with(handleRequest(HttpMethod.Post, "/login") {
+            addHeader(HttpHeaders.ContentType, "application/json")
+            setBody("""{"username": "$username", "password": "$password"}""")
+        }, code)
+    }
+
     @Test
-    fun testLogin() {
-//        val client = HttpClient()
-//        val DB = mutableMapOf<String, Int>("log" to "pass".hashCode())
-//        val request = client.post<JSONObject> {
-//            url("http://127.0.0.1:8080/login")
-//
-//        }
+    fun testLoginOK() {
+        withAppAndServer {server ->
+            server.register("Antoha", "shananton@kek.lol", "+7654382145", "shananton", "qwerty123")
+            withLoginRequest("shananton", "qwerty123") {
+                assertEquals(response.status(), HttpStatusCode.OK)
+            }
+        }
+    }
+
+
+    @Test
+    fun testLoginFail() {
+        withAppAndServer {server ->
+            server.register("Antoha", "shananton@kek.lol", "+7654382145", "shananton", "qwerty123")
+            withLoginRequest("shananton", "eye4goat") {
+                assertEquals(response.status(), HttpStatusCode.OK)
+            }
+        }
     }
 
     @Test
     fun testRegister() {
-
     }
 
     @Test

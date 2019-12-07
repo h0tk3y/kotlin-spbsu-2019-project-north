@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
 
-class MessageDBTest : DBTest() {
+class MessageDBTest : DBTestWithKoin() {
     @Test
     fun getByIdTest() {
         val base: MessageDao by inject()

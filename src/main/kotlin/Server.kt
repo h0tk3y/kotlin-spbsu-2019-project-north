@@ -4,11 +4,9 @@ import model.Message
 import model.User
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import java.lang.Exception
 
-class RegisterUserInfo(
-    val message: String? = null,
-    val user: User? = null
-)
+data class InvalidRequestException(val reason: String) : Exception()
 
 class Server : KoinComponent {
     val userBase: UserDao by inject()
@@ -20,35 +18,26 @@ class Server : KoinComponent {
     val membersOfGroupChatBase: MembersOfGroupChatDao by inject()
     val contactsOfUserBase: ContactsOfUserDao by inject()
 
-//    fun register(name: String?, email: String?, phoneNumber: String?, login: String?, password: String?)
-//            : RegisterUserInfo {
-//        when (name) {
-//            null -> RegisterUserInfo(message = "Invalid name")
-//            else -> when {
-//                email == null -> RegisterUserInfo(message = "Invalid email")
-//                !email.contains('@') -> RegisterUserInfo(message = "Incorrect email")
-//                else -> when {
-//                    phoneNumber == null -> RegisterUserInfo(message = "Invalid email")
-//                    phoneNumber.chars().anyMatch(Character::isLetter) ->
-//                        RegisterUserInfo(message = "Incorrect phone number")
-//                    else -> when {
-//                        login == null -> RegisterUserInfo(message = "Invalid login")
-//                        userBase.existsLogin(login) ->
-//                            RegisterUserInfo(message = "User with such login already exists")
-//                        else -> when {
-//                            password == null ->
-//                                RegisterUserInfo(message = "Invalid password")
-//                            password.length < 6 ->
-//                                RegisterUserInfo(message = "Password is too short")
-//                            else -> RegisterUserInfo(user = userBase.addNewUser(name, email, phoneNumber, login, password))
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
+    fun register(name: String, email: String, phoneNumber: String, login: String, password: String): User {
+        return when {
+            email.count { it == '@' } != 1 -> throw InvalidRequestException("Email must contain exactly one '@'")
+            !phoneNumber.all {
+                it in listOf(
+                    '+',
+                    '-',
+                    '(',
+                    ')'
+                ) || it.isDigit()
+            } -> throw InvalidRequestException("Invalid phone number")
+            userBase.existsLogin(login) -> throw InvalidRequestException("Username already taken")
+            else -> userBase.addNewUser(name, email, phoneNumber, login, password)
+        }
+    }
 
     fun getUserByCredentials(credentials: UserPasswordCredential): User? = userBase.getUserByCredentials(credentials)
+    fun getUserById(id: UserId): User? = userBase.getById(id)
+
+//    fun isUserMemberOfChat(id: UserId, chatId: )
 
     fun getChats(userId: UserId): List<GroupChatId> = getPersonalChats(userId).plus(getGroupChats(userId))
     fun getPersonalChats(userId: UserId) = personalChatBase.selectWithUser(userId)
