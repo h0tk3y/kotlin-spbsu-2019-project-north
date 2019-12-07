@@ -79,9 +79,6 @@ dependencies {
     // Database
     compile("org.postgresql:postgresql:42.2.2")
     testCompile("org.testcontainers:postgresql:1.12.3")
-
-    // Docker
-    testCompile("com.palantir.docker.compose:docker-compose-junit-jupiter:1.3.0")
 }
 
 tasks.test {
