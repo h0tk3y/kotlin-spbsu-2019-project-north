@@ -1,12 +1,10 @@
-import dao.BlockedUsersDao
 import dao.ContactsOfUserDao
 import dao.UserDao
-import model.Contact
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
 
-class ContactsOfUserDBTest : DBTest {
+class ContactsOfUserDBTest : DBTest() {
     @Test
     fun addAndContainsTest() {
         val base: ContactsOfUserDao by inject()

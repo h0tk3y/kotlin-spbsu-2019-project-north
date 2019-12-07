@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
 
-class BlockedUsersDBTest : DBTest {
+class BlockedUsersDBTest : DBTest() {
     @Test
     fun allTest() {
         val base: BlockedUsersDao by inject()
