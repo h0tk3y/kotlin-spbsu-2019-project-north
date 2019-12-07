@@ -37,28 +37,29 @@ repositories {
     mavenLocal()
     jcenter()
     maven(url = "https://kotlin.bintray.com/ktor")
-    maven(url = "https://dl.bintray.com/palantir/releases")
 }
 
 val ktor_version = "1.2.4"
 val junitJupiterVersion = "5.5.2"
 
 dependencies {
-    implementation("org.koin:koin-core:$koin_version")
-    testImplementation("org.koin:koin-test:$koin_version")
+    // Kotlin
+    compile(kotlin("stdlib"))
+    implementation(kotlin("stdlib"))
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    // Junit
     testCompile("junit:junit:4.12")
     testCompile("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
-    testImplementation("org.testcontainers:junit-jupiter:1.12.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
-    compile(kotlin("stdlib"))
+    testImplementation("org.testcontainers:junit-jupiter:1.12.3")
 
     // Koin
     compile("org.koin:koin-ktor:$koin_version")
     compile("org.koin:koin-logger-slf4j:$koin_version")
     testCompile("org.koin:koin-test:$koin_version")
+    implementation("org.koin:koin-core:$koin_version")
+    testImplementation("org.koin:koin-test:$koin_version")
 
     // Ktor
     compile("io.ktor:ktor-server-netty:$ktor_version")
