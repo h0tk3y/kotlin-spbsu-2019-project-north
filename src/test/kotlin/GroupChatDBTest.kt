@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
 
-class GroupChatDBTest: DBTest {
+class GroupChatDBTest : DBTest() {
     @Test
     fun addNewGroupChatTest() {
         val chats: GroupChatDao by inject()

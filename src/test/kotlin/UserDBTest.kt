@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
 
-class UserDbTest : DBTest {
+class UserDbTest : DBTest() {
 
     @Test
     fun getUserByCredentialsTest() {

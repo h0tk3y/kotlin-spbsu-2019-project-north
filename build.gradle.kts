@@ -1,8 +1,3 @@
-import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer
-import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
-import com.bmuschko.gradle.docker.tasks.container.DockerStopContainer
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-
 buildscript {
     repositories {
         jcenter()
@@ -38,24 +33,26 @@ repositories {
 
 val koin_version = "2.0.1"
 
-dependencies {
-    implementation("org.koin:koin-core:$koin_version")
-    testImplementation("org.koin:koin-test:$koin_version")
-}
-
 repositories {
     mavenLocal()
     jcenter()
     maven(url = "https://kotlin.bintray.com/ktor")
+    maven(url = "https://dl.bintray.com/palantir/releases")
 }
 
 val ktor_version = "1.2.4"
+val junitJupiterVersion = "5.5.2"
 
 dependencies {
+    implementation("org.koin:koin-core:$koin_version")
+    testImplementation("org.koin:koin-test:$koin_version")
+
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     testCompile("junit:junit:4.12")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
+    testCompile("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
+    testImplementation("org.testcontainers:junit-jupiter:1.12.3")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
     compile(kotlin("stdlib"))
 
     // Koin
@@ -81,6 +78,10 @@ dependencies {
 
     // Database
     compile("org.postgresql:postgresql:42.2.2")
+    testCompile("org.testcontainers:postgresql:1.12.3")
+
+    // Docker
+    testCompile("com.palantir.docker.compose:docker-compose-junit-jupiter:1.3.0")
 }
 
 tasks.test {
@@ -93,30 +94,4 @@ tasks.compileKotlin {
 
 tasks.compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
-}
-
-val buildMyAppImage by tasks.creating(DockerBuildImage::class) {
-    inputDir.set(file("docker/test"))
-    images.add("test/myapp:latest")
-}
-
-val createMyAppContainer by tasks.creating(DockerCreateContainer::class) {
-    dependsOn(buildMyAppImage)
-    targetImageId(buildMyAppImage.imageId)
-    hostConfig.portBindings.set(listOf("8080:8080"))
-    hostConfig.autoRemove.set(true)
-}
-
-val startMyAppContainer by tasks.creating(DockerStartContainer::class) {
-    dependsOn(createMyAppContainer)
-    targetContainerId(createMyAppContainer.containerId)
-}
-
-val stopMyAppContainer by tasks.creating(DockerStopContainer::class) {
-    targetContainerId(createMyAppContainer.containerId)
-}
-
-tasks.create("functionalTestMyApp", Test::class) {
-    dependsOn(startMyAppContainer)
-    finalizedBy(stopMyAppContainer)
 }

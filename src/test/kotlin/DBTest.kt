@@ -1,29 +1,48 @@
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.TestInstance
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
+import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
 import tables.*
 
-var isConnected: Boolean = false
+internal class SpecifiedPostgreSQLContainer(val image: String) :
+    PostgreSQLContainer<SpecifiedPostgreSQLContainer>(image)
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-interface DBTest : KoinTest {
+@Testcontainers
+open class DBTest : KoinTest {
+
+    companion object {
+        @Container
+        @JvmField
+        internal val postgres = PostgreSQLContainer<SpecifiedPostgreSQLContainer>()
+
+        @BeforeAll
+        @JvmStatic
+        internal fun initContainer() {
+            postgres.start()
+            Database.connect(
+                postgres.jdbcUrl, driver = "org.postgresql.Driver",
+                user = postgres.username, password = postgres.password
+            )
+        }
+
+        @AfterAll
+        @JvmStatic
+        internal fun closePostgres() = postgres.close()
+    }
+
 
     @BeforeEach
     fun start() {
         startKoin { modules(daoModule) }
-        if (!isConnected) {
-            Database.connect(
-                "jdbc:postgresql://localhost:5432/testdb", driver = "org.postgresql.Driver",
-                user = "testuser", password = "123456"
-            )
-            isConnected = true
-        }
         transaction {
             SchemaUtils.drop(BlockedUsers)
             SchemaUtils.drop(Contacts)

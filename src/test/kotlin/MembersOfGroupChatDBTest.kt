@@ -1,12 +1,11 @@
 import dao.GroupChatDao
-import dao.GroupChatsOfUserDao
 import dao.MembersOfGroupChatDao
 import dao.UserDao
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
 
-class MembersOfGroupChatDBTest : DBTest {
+class MembersOfGroupChatDBTest : DBTest() {
     @Test
     fun addTest() {
         val base: MembersOfGroupChatDao by inject()
