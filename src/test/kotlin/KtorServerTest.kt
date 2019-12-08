@@ -2,7 +2,6 @@ import io.ktor.application.Application
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.content.HttpStatusCodeContent
 import io.ktor.server.testing.*
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
@@ -16,7 +15,11 @@ class KtorServerTest : DBTest() {
         }
     }
 
-    fun TestApplicationEngine.withLoginRequest(username: String, password: String, code: TestApplicationCall.() -> Unit) {
+    fun TestApplicationEngine.withLoginRequest(
+        username: String,
+        password: String,
+        code: TestApplicationCall.() -> Unit
+    ) {
         with(handleRequest(HttpMethod.Post, "/login") {
             addHeader(HttpHeaders.ContentType, "application/json")
             setBody("""{"username": "$username", "password": "$password"}""")
@@ -25,10 +28,10 @@ class KtorServerTest : DBTest() {
 
     @Test
     fun testLoginOK() {
-        withAppAndServer {server ->
+        withAppAndServer { server ->
             server.register("Antoha", "shananton@kek.lol", "+7654382145", "shananton", "qwerty123")
             withLoginRequest("shananton", "qwerty123") {
-                assertEquals(response.status(), HttpStatusCode.OK)
+                assertEquals(HttpStatusCode.OK, response.status())
             }
         }
     }
@@ -36,10 +39,10 @@ class KtorServerTest : DBTest() {
 
     @Test
     fun testLoginFail() {
-        withAppAndServer {server ->
+        withAppAndServer { server ->
             server.register("Antoha", "shananton@kek.lol", "+7654382145", "shananton", "qwerty123")
             withLoginRequest("shananton", "eye4goat") {
-                assertEquals(response.status(), HttpStatusCode.OK)
+                assertEquals(HttpStatusCode.Forbidden, response.status())
             }
         }
     }
