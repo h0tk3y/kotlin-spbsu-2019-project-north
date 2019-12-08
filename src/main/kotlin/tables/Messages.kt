@@ -5,9 +5,9 @@ import org.jetbrains.exposed.sql.datetime
 
 object Messages : LongIdTable() {
     val from = long("from").entityId().references(Users.id)
-    val typeOfChat = bool("type of chat")
-    val chat = long("chat")
-    val text = text("text")
+    val typeOfChat = bool("type of chat").index()
+    val chat = long("chat").index()
+    val text = text("text").index()
     val dateTime = datetime("dateTime")
     val isDeleted = bool("isDeleted")
     val isEdited = bool("isEdited")
