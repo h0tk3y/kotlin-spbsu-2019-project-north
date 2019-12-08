@@ -74,4 +74,10 @@ class Server : KoinComponent {
 
     fun unBlockUser(user: UserId, blockedUser: UserId) =
         blockedUsersBase.unblock(user, blockedUser)
+
+    fun addContact(user: UserId, addUser: UserId, name: String) =
+        contactsOfUserBase.add(user, Pair(addUser, name))
+    
+    fun changeName(userId: UserId, contactId: Id, name: String) =
+        contactsOfUserBase.changeName(userId, contactId, name)
 }
