@@ -49,6 +49,9 @@ class BlockedUsersDBTest : DBTest() {
         Assertions.assertTrue(base.isBlocked(antoha, alya))
 
         base.unblock(alya, nikita)
+        base.unblock(alya, nikita)
+        base.unblock(antoha, nikita)
+
         base.block(nikita, antoha)
 
         Assertions.assertEquals(0, base.select(alya).size)
