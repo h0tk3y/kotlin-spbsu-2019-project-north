@@ -1,3 +1,6 @@
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.annotation.JsonNaming
 import dao.GroupChatId
 import dao.MessageId
 import dao.PersonalChatId
@@ -14,14 +17,18 @@ data class User(
     val password: String
 ) : Principal
 
+//@JsonNaming(PropertyNamingStrategy.LowerCaseStrategy::class)
 data class Message(
     val id: MessageId,
     val from: UserId,
+    @JsonProperty("personal")
     val isPersonal: Boolean,
     val chat: Long,
     val text: String,
     val datetime: Date,
+    @JsonProperty("deleted")
     val isDeleted: Boolean,
+    @JsonProperty("edited")
     val isEdited: Boolean
 )
 
