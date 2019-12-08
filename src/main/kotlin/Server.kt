@@ -45,8 +45,8 @@ class Server : KoinComponent {
 
     fun getContacts(userId: UserId) = contactsOfUserBase.select(userId)
 
-    fun getChatMessages(chatid: Id, isPersonal: Boolean, block: Int, last: Int?): List<Message> =
-        messageBase.findSliceFromChat(isPersonal, chatid, block, last).map { it.toMessage() }
+    fun getChatMessages(chatId: Id, isPersonal: Boolean): List<Message> =
+        messageBase.getMessagesFromChat(isPersonal, chatId).map { it.toMessage() }
 
     fun sendMessage(from: UserId, isPersonal: Boolean, chatId: Id, text: String) =
         messageBase.addNewMessage(from, isPersonal, chatId, text)?.toMessage()
