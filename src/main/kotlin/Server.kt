@@ -22,12 +22,7 @@ class Server : KoinComponent {
         return when {
             email.count { it == '@' } != 1 -> throw InvalidRequestException("Email must contain exactly one '@'")
             !phoneNumber.all {
-                it in listOf(
-                    '+',
-                    '-',
-                    '(',
-                    ')'
-                ) || it.isDigit()
+                it in "+-()" || it.isDigit()
             } -> throw InvalidRequestException("Invalid phone number")
             userBase.existsLogin(login) -> throw InvalidRequestException("Username already taken")
             else -> userBase.addNewUser(name, email, phoneNumber, login, password)
@@ -46,8 +41,8 @@ class Server : KoinComponent {
 
     fun getContacts(userId: UserId) = contactsOfUserBase.select(userId)
 
-    fun getChatMessages(chatid: Id, isPersonal: Boolean, block: Int, last: Int?): List<Message> =
-        messageBase.findSliceFromChat(isPersonal, chatid, block, last)
+    fun getChatMessages(chatId: Id, isPersonal: Boolean, block: Int, last: Int?): List<Message> =
+        messageBase.findSliceFromChat(isPersonal, chatId, block, last)
 
     fun sendMessage(from: UserId, isPersonal: Boolean, chatId: Id, text: String) =
         messageBase.addNewMessage(from, isPersonal, chatId, text)

@@ -16,13 +16,13 @@ object JwtConfig {
         .withIssuer(issuer)
         .build()
 
-    fun makeToken(user: User): String = JWT.create()
+    fun makeToken(user: User, expirationDate: Date = getExpirationDate()): String = JWT.create()
         .withSubject("authentication")
         .withIssuer(issuer)
         .withClaim("id", user.id.value)
-        .withExpiresAt(getExpirationDate())
+        .withExpiresAt(expirationDate)
         .sign(algorithm)
 
-    val validityInMs = 1000 * 60 * 60 * 5 //5 hours
+    private const val validityInMs = 1000 * 60 * 60 * 5 //5 hours
     private fun getExpirationDate() = Date(System.currentTimeMillis() + validityInMs)
 }
