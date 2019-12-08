@@ -1,7 +1,6 @@
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import model.User
 import java.util.*
 
 object JwtConfig {
@@ -19,7 +18,7 @@ object JwtConfig {
     fun makeToken(user: User): String = JWT.create()
         .withSubject("authentication")
         .withIssuer(issuer)
-        .withClaim("id", user.id.value)
+        .withClaim("id", user.id)
         .withExpiresAt(getExpirationDate())
         .sign(algorithm)
 

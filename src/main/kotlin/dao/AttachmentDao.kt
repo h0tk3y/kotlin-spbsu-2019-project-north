@@ -1,6 +1,6 @@
 package dao
 
-import model.Attachment
+import entries.Attachment
 
 interface AttachmentDao : ObjectDao<Attachment> {
 }

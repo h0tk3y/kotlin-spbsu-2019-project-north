@@ -3,10 +3,10 @@ package databases
 import dao.Id
 import dao.MessageDao
 import dao.UserId
-import model.GroupChat
-import model.Message
-import model.PersonalChat
-import model.User
+import entries.GroupChatDBEntry
+import entries.MessageDBEntry
+import entries.PersonalChatDBEnrty
+import entries.UserDBEntry
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -16,15 +16,15 @@ import tables.Messages
 class MessageDB : MessageDao {
     override fun addNewMessage(from: UserId, isPersonal: Boolean, chat: Id, text: String) =
         transaction {
-            val fromId = User.findById(from)?.id ?: return@transaction null
+            val fromId = UserDBEntry.findById(from)?.id ?: return@transaction null
             val chatId: Id
 
             if (isPersonal)
-                chatId = PersonalChat.findById(chat)?.id?.value ?: return@transaction  null
+                chatId = PersonalChatDBEnrty.findById(chat)?.id?.value ?: return@transaction null
             else
-                chatId = GroupChat.findById(chat)?.id?.value ?: return@transaction  null
+                chatId = GroupChatDBEntry.findById(chat)?.id?.value ?: return@transaction null
 
-            Message.new {
+            MessageDBEntry.new {
                 this.from = fromId
                 this.isPersonal = isPersonal
                 this.chat = chatId
@@ -35,18 +35,18 @@ class MessageDB : MessageDao {
             }
         }
 
-    override fun getById(elemId: Id) = transaction { Message.findById(elemId) }
+    override fun getById(elemId: Id) = transaction { MessageDBEntry.findById(elemId) }
 
     override fun deleteById(elemId: Id) =
-        transaction { Message.findById(elemId)?.delete() ?: Unit }
+        transaction { MessageDBEntry.findById(elemId)?.delete() ?: Unit }
 
     override fun findByUser(user: UserId) =
-        transaction { Message.find { Messages.from eq user }.toList() }
+        transaction { MessageDBEntry.find { Messages.from eq user }.toList() }
 
     override fun findSliceFromChat(isPersonal: Boolean, chat: Id, block: Int, last: Int?) =
         transaction {
             val chatMessages =
-                Message
+                MessageDBEntry
                     .find { (Messages.isPersonal eq isPersonal) and (Messages.chat eq chat) }
                     .orderBy(Messages.dateTime to SortOrder.ASC)
             val offset = last ?: (maxOf(chatMessages.count() - block, 0))
@@ -55,5 +55,5 @@ class MessageDB : MessageDao {
 
 
     override val size
-        get() = transaction { Message.all().count() }
+        get() = transaction { MessageDBEntry.all().count() }
 }

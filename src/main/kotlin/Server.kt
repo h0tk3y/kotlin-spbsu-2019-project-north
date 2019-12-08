@@ -1,10 +1,7 @@
 import dao.*
 import io.ktor.auth.UserPasswordCredential
-import model.Message
-import model.User
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import java.lang.Exception
 
 data class InvalidRequestException(val reason: String) : Exception()
 
@@ -30,12 +27,14 @@ class Server : KoinComponent {
                 ) || it.isDigit()
             } -> throw InvalidRequestException("Invalid phone number")
             userBase.existsLogin(login) -> throw InvalidRequestException("Username already taken")
-            else -> userBase.addNewUser(name, email, phoneNumber, login, password)
+            else -> userBase.addNewUser(name, email, phoneNumber, login, password).toUser()
         }
     }
 
-    fun getUserByCredentials(credentials: UserPasswordCredential): User? = userBase.getUserByCredentials(credentials)
-    fun getUserById(id: UserId): User? = userBase.getById(id)
+    fun getUserByCredentials(credentials: UserPasswordCredential): User? =
+        userBase.getUserByCredentials(credentials)?.toUser()
+
+    fun getUserById(id: UserId): User? = userBase.getById(id)?.toUser()
 
 //    fun isUserMemberOfChat(id: UserId, chatId: )
 
@@ -47,14 +46,14 @@ class Server : KoinComponent {
     fun getContacts(userId: UserId) = contactsOfUserBase.select(userId)
 
     fun getChatMessages(chatid: Id, isPersonal: Boolean, block: Int, last: Int?): List<Message> =
-        messageBase.findSliceFromChat(isPersonal, chatid, block, last)
+        messageBase.findSliceFromChat(isPersonal, chatid, block, last).map { it.toMessage() }
 
     fun sendMessage(from: UserId, isPersonal: Boolean, chatId: Id, text: String) =
-        messageBase.addNewMessage(from, isPersonal, chatId, text)
+        messageBase.addNewMessage(from, isPersonal, chatId, text)?.toMessage()
 
     fun createGroupChat(userId: UserId, name: String, uniqueLink: String?) =
-        groupChatBase.addNewGroupChat(userId, name, uniqueLink)
+        groupChatBase.addNewGroupChat(userId, name, uniqueLink)?.toGroupChat()
 
     fun createPersonalChat(user1: UserId, user2: UserId) =
-        personalChatBase.addNewPersonalChat(user1, user2)
+        personalChatBase.addNewPersonalChat(user1, user2)?.toPersonalChat()
 }

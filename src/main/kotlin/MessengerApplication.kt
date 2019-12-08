@@ -1,10 +1,13 @@
 import dao.UserId
+import entries.UserDBEntry
 import io.ktor.application.Application
-import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.auth.*
+import io.ktor.auth.Authentication
+import io.ktor.auth.UserPasswordCredential
+import io.ktor.auth.authenticate
 import io.ktor.auth.jwt.jwt
+import io.ktor.auth.principal
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode
@@ -14,7 +17,6 @@ import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
-import model.User
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
 
@@ -80,7 +82,7 @@ class MessengerApplication {
                 )
                 for ((path, function) in getByIdRequestsMap) {
                     get(path) {
-                        call.respond(HttpStatusCode.OK, function(server, call.principal<User>()!!.id.value))
+                        call.respond(HttpStatusCode.OK, function(server, call.principal<UserDBEntry>()!!.id.value))
                     }
                 }
 //                get("/getChatMessages") {

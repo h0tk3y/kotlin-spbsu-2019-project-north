@@ -1,11 +1,11 @@
 package dao
 
-import model.GroupChat
+import entries.GroupChatDBEntry
 
 typealias GroupChatId = Long
 
-interface GroupChatDao : ObjectDao<GroupChat> {
-    fun addNewGroupChat(owner: UserId, chatName: String, uniqueLink: String?): GroupChat?
-    fun searchByName(name: String): List<GroupChat>
-    fun getChatByInviteLink(link: String): GroupChat?
+interface GroupChatDao : ObjectDao<GroupChatDBEntry> {
+    fun addNewGroupChat(owner: UserId, chatName: String, uniqueLink: String?): GroupChatDBEntry?
+    fun searchByName(name: String): List<GroupChatDBEntry>
+    fun getChatByInviteLink(link: String): GroupChatDBEntry?
 }
