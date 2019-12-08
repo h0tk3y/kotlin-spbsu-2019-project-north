@@ -3,7 +3,7 @@ import dao.MessageId
 import dao.PersonalChatId
 import dao.UserId
 import io.ktor.auth.Principal
-import org.joda.time.DateTime
+import java.util.*
 
 data class User(
     val id: UserId,
@@ -20,7 +20,7 @@ data class Message(
     val isPersonal: Boolean,
     val chat: Long,
     val text: String,
-    val datetime: DateTime,
+    val datetime: Date,
     val isDeleted: Boolean,
     val isEdited: Boolean
 )

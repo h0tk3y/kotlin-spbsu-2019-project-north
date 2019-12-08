@@ -18,5 +18,5 @@ class MessageDBEntry(id: EntityID<Long>) : LongEntity(id) {
     var isEdited by Messages.isEdited
 
     fun toMessage() =
-        Message(id.value, from.value, isPersonal, chat, text, dateTime, isDeleted, isEdited)
+        Message(id.value, from.value, isPersonal, chat, text, dateTime.toDate(), isDeleted, isEdited)
 }
