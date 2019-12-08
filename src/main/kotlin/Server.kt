@@ -57,8 +57,8 @@ class Server : KoinComponent {
 
     fun getContacts(userId: UserId) = contactsOfUserBase.select(userId)
 
-    fun getChatMessages(chatid: Id, isPersonal: Boolean, block: Int, last: Int?): List<Message> =
-        messageBase.findSliceFromChat(isPersonal, chatid, block, last)
+    fun getChatMessages(chatid: Id, isPersonal: Boolean): List<Message> =
+        messageBase.getMessagesFromChat(isPersonal, chatid)
 
     fun sendMessage(from: UserId, isPersonal: Boolean, chatId: Id, text: String) =
         messageBase.addNewMessage(from, isPersonal, chatId, text)
@@ -72,12 +72,12 @@ class Server : KoinComponent {
     fun blockUser(user: UserId, blockedUser: UserId) =
         blockedUsersBase.block(user, blockedUser)
 
-    fun unBlockUser(user: UserId, blockedUser: UserId) =
+    fun unblockUser(user: UserId, blockedUser: UserId) =
         blockedUsersBase.unblock(user, blockedUser)
 
     fun addContact(user: UserId, addUser: UserId, name: String) =
         contactsOfUserBase.add(user, Pair(addUser, name))
-    
-    fun changeName(userId: UserId, contactId: Id, name: String) =
+
+    fun changeNameOfContact(userId: UserId, contactId: Id, name: String) =
         contactsOfUserBase.changeName(userId, contactId, name)
 }

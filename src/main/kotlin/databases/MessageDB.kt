@@ -7,7 +7,6 @@ import model.GroupChat
 import model.Message
 import model.PersonalChat
 import model.User
-import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
@@ -20,9 +19,9 @@ class MessageDB : MessageDao {
             val chatId: Id
 
             if (isPersonal)
-                chatId = PersonalChat.findById(chat)?.id?.value ?: return@transaction  null
+                chatId = PersonalChat.findById(chat)?.id?.value ?: return@transaction null
             else
-                chatId = GroupChat.findById(chat)?.id?.value ?: return@transaction  null
+                chatId = GroupChat.findById(chat)?.id?.value ?: return@transaction null
 
             Message.new {
                 this.from = fromId
@@ -38,20 +37,28 @@ class MessageDB : MessageDao {
     override fun getById(elemId: Id) = transaction { Message.findById(elemId) }
 
     override fun deleteById(elemId: Id) =
-        transaction { Message.findById(elemId)?.delete() ?: Unit }
+        transaction {
+            val msg = Message.findById(elemId) ?: return@transaction
+            msg.text = "DELETED"
+            msg.isDeleted = true
+        }
 
     override fun findByUser(user: UserId) =
         transaction { Message.find { Messages.from eq user }.toList() }
 
-    override fun findSliceFromChat(isPersonal: Boolean, chat: Id, block: Int, last: Int?) =
+    override fun getMessagesFromChat(isPersonal: Boolean, chat: Id): List<Message> =
         transaction {
-            val chatMessages =
-                Message
-                    .find { (Messages.isPersonal eq isPersonal) and (Messages.chat eq chat) }
-                    .orderBy(Messages.dateTime to SortOrder.ASC)
-            val offset = last ?: (maxOf(chatMessages.count() - block, 0))
-            chatMessages.limit(block, offset).toList().reversed()
+            Message.find { (Messages.isPersonal eq isPersonal) and (Messages.chat eq chat) }.toList()
         }
+//    override fun findSliceFromChat(isPersonal: Boolean, chat: Id, block: Int, last: Int?) =
+//        transaction {
+//            val chatMessages =
+//                Message
+//                    .find { (Messages.isPersonal eq isPersonal) and (Messages.chat eq chat) }
+//                    .orderBy(Messages.dateTime to SortOrder.ASC)
+//            val offset = last ?: (maxOf(chatMessages.count() - block, 0))
+//            chatMessages.limit(block, offset).toList().reversed()
+//        }
 
 
     override val size
