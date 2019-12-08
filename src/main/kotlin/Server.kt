@@ -29,31 +29,18 @@ class Server : KoinComponent {
         //return token
     }
 
-    fun register(name: String?, email: String?, phoneNumber: String?, login: String?, password: String?)
-            : RegisterUserInfo {
-        when (name) {
-            null -> RegisterUserInfo(message = "Invalid name")
-            else -> when {
-                email == null -> RegisterUserInfo(message = "Invalid email")
-                !email.contains('@') -> RegisterUserInfo(message = "Incorrect email")
-                else -> when {
-                    phoneNumber == null -> RegisterUserInfo(message = "Invalid email")
-                    phoneNumber.chars().anyMatch(Character::isLetter) ->
-                        RegisterUserInfo(message = "Incorrect phone number")
-                    else -> when {
-                        login == null -> RegisterUserInfo(message = "Invalid login")
-                        userBase.existsLogin(login) ->
-                            RegisterUserInfo(message = "User with such login already exists")
-                        else -> when {
-                            password == null ->
-                                RegisterUserInfo(message = "Invalid password")
-                            password.length < 6 ->
-                                RegisterUserInfo(message = "Password is too short")
-                            else -> RegisterUserInfo(user = userBase.addNewUser(name, email, phoneNumber, login, password))
-                        }
-                    }
-                }
-            }
+    fun register(form: RegistrationForm)
+            : RegisterUserInfo =
+        when {
+            !form.email.contains('@') ->
+                RegisterUserInfo(message = "Incorrect email")
+            form.phoneNumber.find { !it.isDigit() } != null ->
+                RegisterUserInfo(message = "Incorrect phone number")
+            userBase.existsLogin(form.login) ->
+                RegisterUserInfo(message = "User with such login already exists")
+            form.password.length < 6 ->
+                RegisterUserInfo(message = "Password is too short")
+            else -> RegisterUserInfo(user = userBase.addNewUser(form))
         }
     }
 

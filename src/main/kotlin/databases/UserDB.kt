@@ -1,5 +1,6 @@
 package databases
 
+import dao.RegistrationForm
 import dao.UserDao
 import dao.UserId
 import io.ktor.auth.UserPasswordCredential
@@ -9,14 +10,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import tables.Users
 
 class UserDB : UserDao {
-    override fun addNewUser(name: String, email: String, phoneNumber: String, login: String, password: String): User =
+    override fun addNewUser(form: RegistrationForm): User =
         transaction {
             User.new {
-                this.name = name
-                this.email = email
-                this.phoneNumber = phoneNumber
-                this.login = login
-                this.password = password
+                this.name = form.name
+                this.email = form.email
+                this.phoneNumber = form.phoneNumber
+                this.login = form.login
+                this.password = form.password
             }
         }
 

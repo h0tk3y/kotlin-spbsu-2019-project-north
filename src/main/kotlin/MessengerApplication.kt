@@ -1,6 +1,8 @@
+import dao.RegistrationForm
 import dao.UserDao
 import dao.UserId
 import io.ktor.application.Application
+import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
@@ -31,6 +33,12 @@ fun Application.main() {
     MessengerApplication().apply { main() }
 }
 
+suspend fun ApplicationCall.respondErr(message: String) =
+    respond(HttpStatusCode.Forbidden, message)
+
+suspend fun ApplicationCall.respondOK(message: String) =
+    respond(HttpStatusCode.OK, message)
+
 class MessengerApplication {
     fun Application.main() {
         install(Koin) {
@@ -54,20 +62,16 @@ class MessengerApplication {
             post("/login") {
                 val credentials = call.receive<UserPasswordCredential>()
                 when(val user = server.getUserByCredentials(credentials)) {
-                    null -> call.respond(HttpStatusCode.Forbidden, "Invalid login/password pair")
-                    else -> call.respond(HttpStatusCode.OK, JwtConfig.makeToken(user))
+                    null -> call.respondErr("Invalid login/password pair")
+                    else -> call.respondOK(JwtConfig.makeToken(user))
                 }
             }
             post("/register") {
-                val name = call.parameters["name"]
-                val email = call.parameters["email"]
-                val phoneNumber = call.parameters["phoneNumber"]
-                val login = call.parameters["login"]
-                val password = call.parameters["password"]
-                val registerUserInfo = server.register(name, email, phoneNumber, login, password)
+                val form = call.receive<RegistrationForm>() ?: call.respondErr("Missing information")
+                val registerUserInfo = server.register(form)
                 when (val user = registerUserInfo.user) {
-                     null -> call.respond(HttpStatusCode.Forbidden, registerUserInfo.message!!)
-                     else -> call.respond(HttpStatusCode.OK, JwtConfig.makeToken(user))
+                     null -> call.respondErr(registerUserInfo.message!!)
+                     else -> call.respondOK(JwtConfig.makeToken(user))
                 }
             }
             authenticate {
@@ -80,8 +84,8 @@ class MessengerApplication {
                 for ((path, function) in getByIdRequestsMap) {
                     get(path) {
                         when (val id = call.parameters["userId"]?.toLong()) {
-                            null -> call.respond(HttpStatusCode.Forbidden, "Invalid id")
-                            else -> call.respond(HttpStatusCode.OK, function(server, id))
+                            null -> call.respondErr("Invalid id")
+                            else -> call.respondOK(function(server, id))
                         }
                     }
                 }
