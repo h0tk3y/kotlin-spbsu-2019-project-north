@@ -16,6 +16,8 @@
 .settings
 .project
 
+.idea/jarRepositories.xml
+
 # Sensitive or high-churn files
 .idea/**/dataSources/
 .idea/**/dataSources.ids
@@ -36,8 +38,8 @@
 .idea/modules.xml
 .idea/*.iml
 .idea/modules
-# *.iml
-# *.ipr
+*.iml
+*.ipr
 
 # CMake
 cmake-build-*/
