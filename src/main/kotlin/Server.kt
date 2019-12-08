@@ -68,4 +68,10 @@ class Server : KoinComponent {
 
     fun createPersonalChat(user1: UserId, user2: UserId) =
         personalChatBase.addNewPersonalChat(user1, user2)
+
+    fun blockUser(user: UserId, blockedUser: UserId) =
+        blockedUsersBase.block(user, blockedUser)
+
+    fun unBlockUser(user: UserId, blockedUser: UserId) =
+        blockedUsersBase.unblock(user, blockedUser)
 }
