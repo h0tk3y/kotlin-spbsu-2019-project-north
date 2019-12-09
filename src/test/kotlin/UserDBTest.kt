@@ -1,11 +1,11 @@
 import dao.UserDao
+import entries.UserDBEntry
 import io.ktor.auth.UserPasswordCredential
-import model.User
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
 
-class UserDbTest : DBTest() {
+class UserDbTest : DBTestWithKoin() {
 
     @Test
     fun getUserByCredentialsTest() {
@@ -161,8 +161,8 @@ class UserDbTest : DBTest() {
             "8"
         )
 
-        val alyas: List<User> = base.searchByName("Alya")
-        val vanyas: List<User> = base.searchByName("Vanya")
+        val alyas: List<UserDBEntry> = base.searchByName("Alya")
+        val vanyas: List<UserDBEntry> = base.searchByName("Vanya")
 
         Assertions.assertEquals(2, alyas.size)
         Assertions.assertTrue(alyas.any{it.id == alya.id})

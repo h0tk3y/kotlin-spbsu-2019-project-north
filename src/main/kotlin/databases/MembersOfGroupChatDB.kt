@@ -3,9 +3,9 @@ package databases
 import dao.GroupChatId
 import dao.MembersOfGroupChatDao
 import dao.UserId
-import model.GroupChat
-import model.GroupChatToUser
-import model.User
+import entries.GroupChatDBEntry
+import entries.GroupChatToUserDBEntry
+import entries.UserDBEntry
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import tables.GroupChatsToUsers
@@ -14,9 +14,9 @@ import tables.getEntityID
 class MembersOfGroupChatDB : MembersOfGroupChatDao {
     override fun add(key: GroupChatId, value: UserId): Boolean =
         transaction {
-            val user = getEntityID<User>(value) ?: return@transaction false
-            val chat = getEntityID<GroupChat>(key) ?: return@transaction false
-            GroupChatToUser.new {
+            val user = getEntityID<UserDBEntry>(value) ?: return@transaction false
+            val chat = getEntityID<GroupChatDBEntry>(key) ?: return@transaction false
+            GroupChatToUserDBEntry.new {
                 this.chatId = chat
                 this.userId = user
             }
@@ -25,14 +25,14 @@ class MembersOfGroupChatDB : MembersOfGroupChatDao {
 
     override fun remove(key: GroupChatId, value: UserId) =
         transaction {
-            val keyId = getEntityID<GroupChat>(key) ?: return@transaction false
-            val valueId = getEntityID<User>(value) ?: return@transaction false
+            val keyId = getEntityID<GroupChatDBEntry>(key) ?: return@transaction false
+            val valueId = getEntityID<UserDBEntry>(value) ?: return@transaction false
 
-            if (valueId.value == GroupChat.findById(keyId.value)?.owner?.value) {
+            if (valueId.value == GroupChatDBEntry.findById(keyId.value)?.owner?.value) {
                 return@transaction false
             }
 
-            GroupChatToUser
+            GroupChatToUserDBEntry
                 .find {
                     (GroupChatsToUsers.chatId eq keyId) and (GroupChatsToUsers.userId eq valueId)
                 }.singleOrNull()?.delete() != null
@@ -40,15 +40,15 @@ class MembersOfGroupChatDB : MembersOfGroupChatDao {
 
     override fun select(key: GroupChatId) =
         transaction {
-            val keyId = getEntityID<GroupChat>(key) ?: return@transaction emptyList<UserId>()
-            GroupChatToUser.find { GroupChatsToUsers.chatId eq keyId }.map { it.userId.value }
+            val keyId = getEntityID<GroupChatDBEntry>(key) ?: return@transaction emptyList<UserId>()
+            GroupChatToUserDBEntry.find { GroupChatsToUsers.chatId eq keyId }.map { it.userId.value }
         }
 
     override fun contains(key: GroupChatId, value: UserId): Boolean =
         transaction {
-            val keyId = getEntityID<GroupChat>(key) ?: return@transaction false
-            val valueId = getEntityID<User>(value) ?: return@transaction false
-            !GroupChatToUser
+            val keyId = getEntityID<GroupChatDBEntry>(key) ?: return@transaction false
+            val valueId = getEntityID<UserDBEntry>(value) ?: return@transaction false
+            !GroupChatToUserDBEntry
                 .find { (GroupChatsToUsers.chatId eq keyId) and (GroupChatsToUsers.userId eq valueId) }
                 .empty()
         }

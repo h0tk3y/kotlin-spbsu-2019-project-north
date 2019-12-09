@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
 
-class ContactsOfUserDBTest : DBTest() {
+class ContactsOfUserDBTest : DBTestWithKoin() {
     @Test
     fun addAndContainsTest() {
         val base: ContactsOfUserDao by inject()

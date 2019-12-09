@@ -1,7 +1,6 @@
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import model.User
 import java.util.*
 
 object JwtConfig {
@@ -16,11 +15,11 @@ object JwtConfig {
         .withIssuer(issuer)
         .build()
 
-    fun makeToken(user: User): String = JWT.create()
+    fun makeToken(user: User, expirationDate: Date = getExpirationDate()): String = JWT.create()
         .withSubject("authentication")
         .withIssuer(issuer)
-        .withClaim("id", user.id.value)
-        .withExpiresAt(getExpirationDate())
+        .withClaim("id", user.id)
+        .withExpiresAt(expirationDate)
         .sign(algorithm)
 
     val validityInMs = 1000 * 60 * 60 * 5 //5 hours

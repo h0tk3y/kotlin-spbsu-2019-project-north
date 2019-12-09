@@ -1,14 +1,9 @@
 import dao.*
 import io.ktor.auth.UserPasswordCredential
-import model.Message
-import model.User
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class RegisterUserInfo(
-    val message: String? = null,
-    val user: User? = null
-)
+data class InvalidRequestException(val reason: String) : Exception()
 
 class Server : KoinComponent {
     val userBase: UserDao by inject()
@@ -20,35 +15,28 @@ class Server : KoinComponent {
     val membersOfGroupChatBase: MembersOfGroupChatDao by inject()
     val contactsOfUserBase: ContactsOfUserDao by inject()
 
-//    fun register(name: String?, email: String?, phoneNumber: String?, login: String?, password: String?)
-//            : RegisterUserInfo {
-//        when (name) {
-//            null -> RegisterUserInfo(message = "Invalid name")
-//            else -> when {
-//                email == null -> RegisterUserInfo(message = "Invalid email")
-//                !email.contains('@') -> RegisterUserInfo(message = "Incorrect email")
-//                else -> when {
-//                    phoneNumber == null -> RegisterUserInfo(message = "Invalid email")
-//                    phoneNumber.chars().anyMatch(Character::isLetter) ->
-//                        RegisterUserInfo(message = "Incorrect phone number")
-//                    else -> when {
-//                        login == null -> RegisterUserInfo(message = "Invalid login")
-//                        userBase.existsLogin(login) ->
-//                            RegisterUserInfo(message = "User with such login already exists")
-//                        else -> when {
-//                            password == null ->
-//                                RegisterUserInfo(message = "Invalid password")
-//                            password.length < 6 ->
-//                                RegisterUserInfo(message = "Password is too short")
-//                            else -> RegisterUserInfo(user = userBase.addNewUser(name, email, phoneNumber, login, password))
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
+    fun register(name: String, email: String, phoneNumber: String, login: String, password: String): User {
+        return when {
+            email.count { it == '@' } != 1 -> throw InvalidRequestException("Email must contain exactly one '@'")
+            !phoneNumber.all {
+                it in listOf(
+                    '+',
+                    '-',
+                    '(',
+                    ')'
+                ) || it.isDigit()
+            } -> throw InvalidRequestException("Invalid phone number")
+            userBase.existsLogin(login) -> throw InvalidRequestException("Username already taken")
+            else -> userBase.addNewUser(name, email, phoneNumber, login, password).toUser()
+        }
+    }
 
-    fun getUserByCredentials(credentials: UserPasswordCredential): User? = userBase.getUserByCredentials(credentials)
+    fun getUserByCredentials(credentials: UserPasswordCredential): User? =
+        userBase.getUserByCredentials(credentials)?.toUser()
+
+    fun getUserById(id: UserId): User? = userBase.getById(id)?.toUser()
+
+//    fun isUserMemberOfChat(id: UserId, chatId: )
 
     fun getChats(userId: UserId): List<GroupChatId> = getPersonalChats(userId).plus(getGroupChats(userId))
     fun getPersonalChats(userId: UserId) = personalChatBase.selectWithUser(userId)
@@ -57,30 +45,15 @@ class Server : KoinComponent {
 
     fun getContacts(userId: UserId) = contactsOfUserBase.select(userId)
 
-    fun getChatMessages(chatid: Id, isPersonal: Boolean): List<Message> =
-        messageBase.getMessagesFromChat(isPersonal, chatid)
+    fun getChatMessages(chatId: Id, isPersonal: Boolean): List<Message> =
+        messageBase.getMessagesFromChat(isPersonal, chatId).map { it.toMessage() }
 
     fun sendMessage(from: UserId, isPersonal: Boolean, chatId: Id, text: String) =
-        messageBase.addNewMessage(from, isPersonal, chatId, text)
+        messageBase.addNewMessage(from, isPersonal, chatId, text)?.toMessage()
 
     fun createGroupChat(userId: UserId, name: String, uniqueLink: String?) =
-        groupChatBase.addNewGroupChat(userId, name, uniqueLink)
-
-    fun addUserToGroupChat(user: UserId, chat: GroupChatId) =
-        groupChatsOfUserBase.add(user, chat)
+        groupChatBase.addNewGroupChat(userId, name, uniqueLink)?.toGroupChat()
 
     fun createPersonalChat(user1: UserId, user2: UserId) =
-        personalChatBase.addNewPersonalChat(user1, user2)
-
-    fun blockUser(user: UserId, blockedUser: UserId) =
-        blockedUsersBase.block(user, blockedUser)
-
-    fun unBlockUser(user: UserId, blockedUser: UserId) =
-        blockedUsersBase.unblock(user, blockedUser)
-
-    fun addContact(user: UserId, addUser: UserId, name: String) =
-        contactsOfUserBase.add(user, Pair(addUser, name))
-
-    fun changeNameOfContact(userId: UserId, contactId: Id, name: String) =
-        contactsOfUserBase.changeName(userId, contactId, name)
+        personalChatBase.addNewPersonalChat(user1, user2)?.toPersonalChat()
 }

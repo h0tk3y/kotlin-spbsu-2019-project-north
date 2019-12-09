@@ -2,12 +2,12 @@ import dao.GroupChatDao
 import dao.MessageDao
 import dao.PersonalChatDao
 import dao.UserDao
-import model.Message
+import entries.MessageDBEntry
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.koin.test.inject
 
-class MessageDBTest : DBTest() {
+class MessageDBTest : DBTestWithKoin() {
     @Test
     fun getByIdTest() {
         val base: MessageDao by inject()
@@ -34,10 +34,10 @@ class MessageDBTest : DBTest() {
         val chat1 = pchats.addNewPersonalChat(alya, vanya)
         val chat2 = gchats.addNewGroupChat(alya, "Alin chat", "1")
 
-        var msg1 : Message? = null
+        var msg1: MessageDBEntry? = null
         if (chat1?.id?.value != null)
             msg1 = base.addNewMessage(alya, true, chat1.id.value, "Priv")
-        var msg2 : Message? = null
+        var msg2: MessageDBEntry? = null
         if (chat2?.id?.value != null)
             msg2 = base.addNewMessage(alya, false, chat2.id.value, "Vsem privet!")
 
@@ -82,10 +82,10 @@ class MessageDBTest : DBTest() {
         val chat1 = pchats.addNewPersonalChat(alya, vanya)
         val chat2 = gchats.addNewGroupChat(alya, "Alin chat", "1")
 
-        var msg1 : Message? = null
+        var msg1: MessageDBEntry? = null
         if (chat1?.id?.value != null)
             msg1 = base.addNewMessage(alya, true, chat1.id.value, "Priv")
-        var msg2 : Message? = null
+        var msg2: MessageDBEntry? = null
         if (chat2?.id?.value != null)
             msg2 = base.addNewMessage(alya, false, chat2.id.value, "Vsem privet!")
 
@@ -134,15 +134,15 @@ class MessageDBTest : DBTest() {
         val chat1 = pchats.addNewPersonalChat(alya, vanya)
         val chat2 = gchats.addNewGroupChat(alya, "Alin chat", "1")
 
-        var msg1 : Message? = null
+        var msg1: MessageDBEntry? = null
         if (chat1?.id?.value != null)
             msg1 = base.addNewMessage(alya, true, chat1.id.value, "Priv")
 
         Assertions.assertEquals(1, base.size)
 
-        var msg2 : Message? = null
-        var msg3 : Message? = null
-        var msg4 : Message? = null
+        var msg2: MessageDBEntry? = null
+        var msg3: MessageDBEntry? = null
+        var msg4: MessageDBEntry? = null
         if (chat2?.id?.value != null) {
             msg2 = base.addNewMessage(alya, false, chat2.id.value, "Vsem privet!")
 

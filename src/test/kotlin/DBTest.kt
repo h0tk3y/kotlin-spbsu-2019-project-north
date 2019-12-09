@@ -42,7 +42,6 @@ open class DBTest : KoinTest {
 
     @BeforeEach
     fun start() {
-        startKoin { modules(daoModule) }
         transaction {
             SchemaUtils.drop(BlockedUsers)
             SchemaUtils.drop(Contacts)
@@ -63,11 +62,4 @@ open class DBTest : KoinTest {
             SchemaUtils.create(BlockedUsers)
         }
     }
-
-
-    @AfterEach
-    fun stop() {
-        stopKoin()
-    }
-
 }

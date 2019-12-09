@@ -1,4 +1,4 @@
-package model
+package entries
 
 import dao.Id
 

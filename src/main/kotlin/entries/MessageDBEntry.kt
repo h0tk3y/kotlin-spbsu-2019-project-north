@@ -1,12 +1,13 @@
-package model
+package entries
 
+import Message
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import tables.Messages
 
-class Message(id: EntityID<Long>) : LongEntity(id) {
-    companion object : LongEntityClass<Message>(Messages)
+class MessageDBEntry(id: EntityID<Long>) : LongEntity(id) {
+    companion object : LongEntityClass<MessageDBEntry>(Messages)
 
     var from by Messages.from
     var isPersonal by Messages.isPersonal
@@ -15,4 +16,7 @@ class Message(id: EntityID<Long>) : LongEntity(id) {
     var dateTime by Messages.dateTime
     var isDeleted by Messages.isDeleted
     var isEdited by Messages.isEdited
+
+    fun toMessage() =
+        Message(id.value, from.value, isPersonal, chat, text, dateTime.toDate(), isDeleted, isEdited)
 }

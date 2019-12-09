@@ -3,9 +3,9 @@ package databases
 import dao.GroupChatDao
 import dao.Id
 import dao.UserId
-import model.GroupChat
-import model.GroupChatToUser
-import model.User
+import entries.GroupChatDBEntry
+import entries.GroupChatToUserDBEntry
+import entries.UserDBEntry
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -17,13 +17,13 @@ import tables.getEntityID
 class GroupChatDB : GroupChatDao {
     override fun addNewGroupChat(owner: UserId, chatName: String, uniqueLink: String?) =
         transaction {
-            val ownerID = getEntityID<User>(owner) ?: return@transaction null
-            GroupChat.new {
+            val ownerID = getEntityID<UserDBEntry>(owner) ?: return@transaction null
+            GroupChatDBEntry.new {
                 this.owner = ownerID
                 this.chatName = chatName
                 this.uniqueLink = uniqueLink
             }.also {
-                GroupChatToUser.new {
+                GroupChatToUserDBEntry.new {
                     this.chatId = it.id
                     this.userId = ownerID
                 }
@@ -31,11 +31,11 @@ class GroupChatDB : GroupChatDao {
         }
 
     override fun getById(elemId: Id) =
-        transaction { GroupChat.findById(elemId) }
+        transaction { GroupChatDBEntry.findById(elemId) }
 
     override fun deleteById(elemId: Id) =
         transaction {
-            val chat = GroupChat.findById(elemId) ?: return@transaction
+            val chat = GroupChatDBEntry.findById(elemId) ?: return@transaction
             if (!GroupChatsToUsers.select { GroupChatsToUsers.chatId eq chat.id }.empty()) {
                 GroupChatsToUsers.deleteWhere { GroupChatsToUsers.chatId eq chat.id }
             }
@@ -43,11 +43,11 @@ class GroupChatDB : GroupChatDao {
         }
 
     override val size: Int
-        get() = transaction { GroupChat.all().count() }
+        get() = transaction { GroupChatDBEntry.all().count() }
 
     override fun searchByName(name: String) =
-        transaction { GroupChat.find { GroupChats.chatName eq name }.toList() }
+        transaction { GroupChatDBEntry.find { GroupChats.chatName eq name }.toList() }
 
     override fun getChatByInviteLink(link: String) =
-        transaction { GroupChat.find { GroupChats.uniqueLink eq link }.singleOrNull() }
+        transaction { GroupChatDBEntry.find { GroupChats.uniqueLink eq link }.singleOrNull() }
 }
