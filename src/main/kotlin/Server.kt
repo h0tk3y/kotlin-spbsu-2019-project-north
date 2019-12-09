@@ -66,13 +66,16 @@ class Server : KoinComponent {
     fun createGroupChat(userId: UserId, name: String, uniqueLink: String?) =
         groupChatBase.addNewGroupChat(userId, name, uniqueLink)
 
+    fun addUserToGroupChat(user: UserId, chat: GroupChatId) =
+        groupChatsOfUserBase.add(user, chat)
+
     fun createPersonalChat(user1: UserId, user2: UserId) =
         personalChatBase.addNewPersonalChat(user1, user2)
 
     fun blockUser(user: UserId, blockedUser: UserId) =
         blockedUsersBase.block(user, blockedUser)
 
-    fun unblockUser(user: UserId, blockedUser: UserId) =
+    fun unBlockUser(user: UserId, blockedUser: UserId) =
         blockedUsersBase.unblock(user, blockedUser)
 
     fun addContact(user: UserId, addUser: UserId, name: String) =
