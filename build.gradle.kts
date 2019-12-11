@@ -68,6 +68,8 @@ dependencies {
     compile("io.ktor:ktor-auth-jwt:$ktor_version")
     compile("io.ktor:ktor-jackson:$ktor_version")
     implementation("io.ktor:ktor-client-apache:$ktor_version")
+    implementation("io.ktor:ktor-client-json-jvm:$ktor_version")
+    implementation("io.ktor:ktor-client-jackson:$ktor_version")
 //    compile('org.slf4j:slf4j-nop:1.7.25'
     testCompile("io.ktor:ktor-server-tests:$ktor_version")
     testCompile("io.ktor:ktor-server-test-host:$ktor_version")
