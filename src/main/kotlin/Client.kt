@@ -34,10 +34,15 @@ class Client() {
             )
         }
 
-    suspend fun register(registerRequest: RegisterRequest) {
-        val response = postRequest("/register", registerRequest)
-        token = response.readText()
-    }
+    suspend fun register(registerRequest: RegisterRequest): String? =
+        try {
+            val response = postRequest("/register", registerRequest)
+            token = response.readText()
+            null
+        } catch (e: InvalidRequestException) {
+            e.reason
+        }
+
 
     suspend fun login(loginRequest: LoginRequest): String? {
         val response = postRequest("/login", loginRequest)

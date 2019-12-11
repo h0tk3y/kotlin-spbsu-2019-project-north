@@ -78,19 +78,15 @@ class ConsoleClient() {
         val phoneNumber = readPhoneNumber()
         val username = readUsername()
         val password = readPassword()
-        try {
-            client.register(
-                RegisterRequest(
-                    name,
-                    email,
-                    phoneNumber,
-                    username,
-                    password
-                )
+        client.register(
+            RegisterRequest(
+                name,
+                email,
+                phoneNumber,
+                username,
+                password
             )
-        } catch (e: InvalidRequestException) {
-            println("Error: ${e.reason}")
-        }
+        )?.let { println("Error: $it")}
     }
 
     private suspend fun launchAuthorization() {
