@@ -1,5 +1,8 @@
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import dao.GroupChatId
+import dao.Id
 import io.ktor.client.HttpClient
+import io.ktor.client.call.receive
 import io.ktor.client.request.*
 import io.ktor.client.response.HttpResponse
 import io.ktor.client.response.readText
@@ -20,9 +23,9 @@ class Client() {
         }
     }
 
-    private suspend fun postRequest(path: String, body: Any): HttpResponse =
+    private suspend fun postRequest(path: String, body: Any? = null): HttpResponse =
         httpClient.post {
-            token?.let { header("Bearer", it) }
+            token?.let { header("Authorization", "Bearer $it") }
             url {
                 this.host = host
                 this.port = port
@@ -60,8 +63,26 @@ class Client() {
         token = null
     }
 
-    //fun sendMessage(id: ChatId, text: String) {}
+    suspend fun sendMessage(messageRequest: SendMessageRequest): String? =
+        try {
+            postRequest("/sendMessage", messageRequest)
+            null
+        } catch (e: PermissionDeniedException) {
+            e.reason
+        }
 
+    suspend fun getChats(isPersonal: Boolean?): List<GroupChatId>? {
+        val urlString = when(isPersonal) {
+            true -> "/getPersonalChats"
+            false -> "/getGroupChats"
+            null -> "/getChats"
+        }
+        val response = postRequest(urlString)
+        return when (response.status) {
+            HttpStatusCode.OK -> response.receive<List<GroupChatId>>()
+            else -> null
+        }
+    }
     //fun createPublicChat(name: String) {}
     //fun createPrivateChat(name: String) {}
     //fun createPersonalChat(user2: User) {}
