@@ -1,3 +1,6 @@
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.databind.util.JSONWrappedObject
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import dao.GroupChatId
 import dao.Id
@@ -9,31 +12,38 @@ import io.ktor.client.response.readText
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.utils.EmptyContent
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.cio.parseResponse
 import io.ktor.http.content.TextContent
+import io.ktor.http.contentType
 
 class Client() {
     private var token: String? = null
-    private val host = "localhost"
-    private val port = 8080
+    private val serverHost = "127.0.0.1"
+    private val serverPort = 8080
     private val httpClient = HttpClient(Apache) {
         install(JsonFeature) {
-            serializer = JacksonSerializer()
+            serializer = JacksonSerializer {
+                enable(SerializationFeature.INDENT_OUTPUT)
+            }
         }
     }
 
-    private suspend fun postRequest(path: String, body: Any? = null): HttpResponse =
+    suspend fun greet() = "Welcome to SnailMail" //postRequest("/").readText()
+    private suspend fun postRequest(path: String, body: Any = EmptyContent): HttpResponse =
         httpClient.post {
             token?.let { header("Authorization", "Bearer $it") }
             url {
-                this.host = host
-                this.port = port
+                host = serverHost
+                port = serverPort
                 encodedPath = path
             }
             this.body = TextContent(
-                jacksonObjectMapper().writeValueAsString(body),
-                contentType = ContentType.Application.Json
+                ObjectMapper().writeValueAsString(body),
+                ContentType.Application.Json
             )
         }
 
@@ -65,14 +75,17 @@ class Client() {
 
     suspend fun sendMessage(messageRequest: SendMessageRequest): String? =
         try {
-            postRequest("/sendMessage", messageRequest)
-            null
+            val response = postRequest("/sendMessage", messageRequest)
+            if (response.status == HttpStatusCode.Unauthorized)
+                "Please log in"
+            else
+                null
         } catch (e: PermissionDeniedException) {
             e.reason
         }
 
     suspend fun getChats(isPersonal: Boolean?): List<GroupChatId>? {
-        val urlString = when(isPersonal) {
+        val urlString = when (isPersonal) {
             true -> "/getPersonalChats"
             false -> "/getGroupChats"
             null -> "/getChats"

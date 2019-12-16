@@ -7,7 +7,7 @@ class ConsoleClient() {
     private var isRunning = true
 
     suspend fun runClient() {
-        println("Welcome to SnailMail!")
+        println(client.greet())
         printHelp()
         while (isRunning) {
             waitForUser()
@@ -136,7 +136,9 @@ class ConsoleClient() {
     private suspend fun sendMessage(isPersonal: Boolean) {
         val chatId = readChatId()
         val messageText = readMessage()
-        client.sendMessage(SendMessageRequest(chatId, isPersonal, messageText))
+        client.sendMessage(SendMessageRequest(chatId, isPersonal, messageText))?. let {
+            println(it)
+        }
     }
 
     private suspend fun getChats(isPersonal: Boolean?) {

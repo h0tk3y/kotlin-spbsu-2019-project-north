@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SnailMail.iml" filepath="$PROJECT_DIR$/.idea/modules/SnailMail.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SnailMail.main.iml" filepath="$PROJECT_DIR$/.idea/modules/SnailMail.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SnailMail.test.iml" filepath="$PROJECT_DIR$/.idea/modules/SnailMail.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/kotlin-spbsu-2019-project-north.iml" filepath="$PROJECT_DIR$/.idea/kotlin-spbsu-2019-project-north.iml" />
     </modules>
   </component>
 </project>
